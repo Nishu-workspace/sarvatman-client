@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 // You will need to install lucide-react if you haven't
@@ -14,19 +15,29 @@ import {
   Clock,
   MessageCircle, // For WhatsApp
 } from "lucide-react";
-
+import Link from "next/link";
 // Assuming your images are set up correctly in your project
 import slipPaver from "../public/images/slip_form_paver.png";
 import img1 from "../public/images/IMG_3031.jpg";
 import img2 from "../public/images/3B6A4921.jpg";
 import kerb from "../public/images/Kerb_Laying_Machine_SKM-60.jpg";
 import img3 from "../public/images/3B6A8133.jpg";
-
+import { X } from "lucide-react";
+import { useState } from "react";
 export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState("General Inquiry");
+
+  // 2. Function to open modal with specific product
+  const openQuoteModal = (productName) => {
+    setSelectedProduct(productName);
+    setIsModalOpen(true);
+  };
   const otherProducts = [
     {
       id: 1,
       name: "Kerb Paver SKM-60",
+      slug: "kerb-paver-skm-60",
       category: "Compact Pavers",
       description:
         "India's most trusted compact kerb paver. Ideal for tight spaces and rapid road edge construction.",
@@ -37,6 +48,7 @@ export default function Home() {
       id: 2,
       name: "Hydraulic Road Sweeper",
       category: "Cleaning Equipment",
+      slug: "hydraulic-road-sweeper",
       description:
         "Heavy-duty hydraulic broom for effective dust and debris cleaning before asphalt laying.",
       specs: ["Width: 2.1 Meters", "Tractor Attached"],
@@ -103,7 +115,7 @@ export default function Home() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-8 font-medium text-sm uppercase tracking-wide">
-            <a href="#products" className="hover:text-amber-600 transition">
+            <a href="/products" className="hover:text-amber-600 transition">
               Products
             </a>
             <a href="#factory" className="hover:text-amber-600 transition">
@@ -164,20 +176,22 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <a
-                href="#contact"
-                className="px-8 py-4 bg-amber-500 text-black font-bold rounded hover:bg-amber-400 transition shadow-[0_0_20px_rgba(245,158,11,0.3)] text-center"
+              {/* Opens Popup */}
+              <button
+                onClick={() => openQuoteModal("Slip Form Paver SP-1080")}
+                className="px-8 py-4 bg-amber-500 text-black font-bold rounded hover:bg-amber-400 transition shadow-lg"
               >
                 Get Best Price
-              </a>
-              <a
-                href="tel:+919876543210"
+              </button>
+
+              {/* Navigates to Page */}
+              <Link
+                href="/products/slip-form-paver"
                 className="px-8 py-4 border border-white text-white font-medium rounded hover:bg-white/10 transition flex items-center justify-center gap-2"
               >
-                <Phone size={18} /> Call Sales Team
-              </a>
+                View Specs <ArrowRight size={18} />
+              </Link>
             </div>
-
             {/* Trust Signal in Hero */}
             <div className="pt-6 border-t border-white/10 flex gap-8">
               <div>
@@ -265,23 +279,36 @@ export default function Home() {
             {otherProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col"
+                className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col border border-slate-100"
               >
-                <div className="h-56 bg-white p-4 relative flex items-center justify-center border-b border-slate-100">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-4 left-4 bg-slate-900 text-white px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
-                    {product.category}
+                {/* 1. Make Image Clickable via Link */}
+                <Link
+                  href={`/products/${product.slug}`}
+                  className="cursor-pointer"
+                >
+                  <div className="h-56 bg-white p-4 relative flex items-center justify-center border-b border-slate-100">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute top-4 left-4 bg-slate-900 text-white px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
+                      {product.category}
+                    </div>
                   </div>
-                </div>
+                </Link>
 
                 <div className="p-6 flex-1 flex flex-col">
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">
-                    {product.name}
-                  </h3>
+                  {/* 2. Make Title Clickable */}
+                  <Link
+                    href={`/products/${product.slug}`}
+                    className="hover:text-amber-600 transition-colors"
+                  >
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">
+                      {product.name}
+                    </h3>
+                  </Link>
+
                   <p className="text-slate-500 text-sm mb-4 line-clamp-2 flex-1">
                     {product.description}
                   </p>
@@ -298,10 +325,24 @@ export default function Home() {
                     ))}
                   </div>
 
-                  {/* UX Improvement: Button focuses on Price/Quote, not just "Specs" */}
-                  <button className="w-full flex justify-center items-center py-3 bg-amber-50 text-amber-700 border border-amber-200 rounded text-sm font-bold hover:bg-amber-500 hover:text-black hover:border-amber-500 transition-all">
-                    Get Best Price
-                  </button>
+                  {/* 3. TWO BUTTONS: One for Quote, One for Details */}
+                  <div className="flex gap-3 mt-auto">
+                    {/* Primary Action: Popup */}
+                    <button
+                      onClick={() => openQuoteModal(product.name)}
+                      className="flex-1 py-3 bg-amber-500 text-black rounded text-sm font-bold hover:bg-amber-400 transition-all"
+                    >
+                      Get Price
+                    </button>
+
+                    {/* Secondary Action: Navigation */}
+                    <Link
+                      href={`/products/${product.slug}`}
+                      className="flex-1 flex justify-center items-center py-3 border border-slate-200 text-slate-700 rounded text-sm font-bold hover:bg-slate-50 transition-all"
+                    >
+                      Details
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
@@ -563,6 +604,78 @@ export default function Home() {
           rights reserved.
         </div>
       </footer>
+      {/* ================= QUOTE POPUP MODAL ================= */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-opacity">
+          {/* Modal Content */}
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative animate-in fade-in zoom-in duration-200">
+            {/* Close Button */}
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 bg-slate-100 rounded-full p-1"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Header */}
+            <div className="bg-amber-500 p-6">
+              <h3 className="text-xl font-bold text-black">Get Best Price</h3>
+              <p className="text-black/80 text-sm mt-1">
+                Quoting for:{" "}
+                <span className="font-bold">{selectedProduct}</span>
+              </p>
+            </div>
+
+            {/* Form */}
+            <div className="p-6 bg-white">
+              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                    placeholder="e.g. Rajesh Patel"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                    Mobile Number (WhatsApp)
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                    placeholder="+91 98765 00000"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                    Company / Location
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                    placeholder="e.g. Surat"
+                  />
+                </div>
+
+                <button className="w-full bg-slate-900 text-white font-bold py-4 rounded hover:bg-slate-800 transition shadow-lg mt-2">
+                  Send Me Price List
+                </button>
+
+                <p className="text-xs text-center text-slate-400 mt-4">
+                  Our sales team usually replies within 30 minutes.
+                </p>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

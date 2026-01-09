@@ -1,6 +1,6 @@
 "use client"; // Needed for interactive elements like buttons/forms
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import {
   Phone,
@@ -137,7 +137,7 @@ export default function ProductPage() {
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="w-24 h-24 bg-slate-100 rounded-lg flex-shrink-0 border hover:border-amber-500 cursor-pointer"
+                    className="w-24 h-24 bg-slate-100 rounded-lg shrink-0 border hover:border-amber-500 cursor-pointer"
                   ></div>
                 ))}
               </div>
@@ -177,7 +177,7 @@ export default function ProductPage() {
                     className="flex items-start gap-3 text-slate-700"
                   >
                     <CheckCircle2
-                      className="text-amber-500 flex-shrink-0 mt-0.5"
+                      className="text-amber-500 shrink-0 mt-0.5"
                       size={18}
                     />
                     <span className="text-sm">{feature}</span>

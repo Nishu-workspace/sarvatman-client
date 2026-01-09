@@ -180,7 +180,7 @@ export default function ProductsPage() {
       </section>
 
       {/* ================= CONTROLS (Filter & Search) ================= */}
-      <section className="sticky top-[72px] z-30 bg-white shadow-md py-4">
+      <section className="sticky top-18 z-30 bg-white shadow-md py-4">
         <div className="container mx-auto px-4 flex flex-col md:flex-row gap-4 justify-between items-center">
           {/* Categories */}
           <div className="flex overflow-x-auto pb-2 md:pb-0 gap-2 w-full md:w-auto hide-scrollbar">
@@ -320,7 +320,7 @@ export default function ProductsPage() {
 
       {/* ================= QUOTE MODAL (Reused) ================= */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-opacity animate-in fade-in">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-opacity animate-in fade-in">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative">
             <button
               onClick={() => setIsModalOpen(false)}

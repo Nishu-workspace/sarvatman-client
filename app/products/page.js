@@ -2,16 +2,28 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
-  Filter,
   ChevronRight,
   Phone,
-  CheckCircle2,
   Download,
   X,
   Menu,
 } from "lucide-react";
+import {
+  fadeInUp,
+  staggerContainer,
+  staggerItem,
+  viewportOptions,
+  buttonHover,
+  buttonTap,
+  cardHover,
+  modalBackdrop,
+  modalContent,
+  sectionHeader,
+  springTransition,
+} from "../../lib/animations";
 
 // --- PRODUCT DATA FROM BROCHURE ---
 const allProducts = [
@@ -144,7 +156,7 @@ export default function ProductsPage() {
             href="/"
             className="text-2xl font-bold tracking-tighter text-black"
           >
-            SIDDHIVINAYAK<span className="text-amber-500">.</span>
+            SARVATMAN<span className="text-amber-500">.</span>
           </Link>
           <div className="hidden md:flex items-center gap-6 font-medium text-sm">
             <Link href="/" className="hover:text-amber-600">
@@ -169,13 +181,23 @@ export default function ProductsPage() {
       {/* ================= PAGE TITLE ================= */}
       <section className="bg-slate-900 text-white py-12 md:py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">
+          <motion.h1 
+            className="text-3xl md:text-5xl font-bold mb-4"
+            {...sectionHeader}
+          >
             Our Product Range
-          </h1>
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+          </motion.h1>
+          <motion.p 
+            className="text-slate-400 max-w-2xl mx-auto text-lg"
+            {...fadeInUp}
+            viewport={viewportOptions}
+            whileInView="animate"
+            initial="initial"
+            transition={{ delay: 0.2, ...fadeInUp.transition }}
+          >
             Manufacturer of Asphalt & Concrete Equipment. From the flagship SP
             1080 to compact kerb pavers.
-          </p>
+          </motion.p>
         </div>
       </section>
 
@@ -218,27 +240,47 @@ export default function ProductsPage() {
 
       {/* ================= PRODUCT GRID ================= */}
       <section className="py-12 container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl transition-shadow group flex flex-col"
-              >
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
+          <AnimatePresence mode="wait">
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  className="bg-white rounded-xl border border-slate-200 overflow-hidden group flex flex-col"
+                  variants={staggerItem}
+                  whileHover={cardHover}
+                  transition={springTransition}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                >
                 {/* Image Link */}
                 <Link
                   href={`/products/${product.slug}`}
                   className="relative h-56 bg-slate-100 flex items-center justify-center overflow-hidden"
                 >
                   {/* Replace with Next/Image in real app */}
-                  <img
+                  <motion.img
                     src={product.image}
                     alt={product.name}
-                    className="max-h-full max-w-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                    className="max-h-full max-w-full object-contain p-4"
+                    whileHover={{ scale: 1.1 }}
+                    transition={springTransition}
                   />
-                  <div className="absolute top-4 left-4 bg-slate-900 text-white text-[10px] font-bold uppercase px-2 py-1 rounded tracking-wider">
+                  <motion.div 
+                    className="absolute top-4 left-4 bg-slate-900 text-white text-[10px] font-bold uppercase px-2 py-1 rounded tracking-wider"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
                     {product.category}
-                  </div>
+                  </motion.div>
                 </Link>
 
                 <div className="p-6 flex-1 flex flex-col">
@@ -267,39 +309,54 @@ export default function ProductsPage() {
 
                   {/* Buttons */}
                   <div className="mt-auto grid grid-cols-2 gap-3">
-                    <button
+                    <motion.button
                       onClick={() => openQuoteModal(product.name)}
-                      className="py-3 bg-amber-500 text-black text-sm font-bold rounded hover:bg-amber-400 transition-colors"
+                      className="py-3 bg-amber-500 text-black text-sm font-bold rounded"
+                      whileHover={buttonHover}
+                      whileTap={buttonTap}
                     >
                       Get Price
-                    </button>
-                    <Link
-                      href={`/products/${product.slug}`}
-                      className="flex items-center justify-center py-3 border border-slate-200 text-slate-700 text-sm font-bold rounded hover:bg-slate-50 transition-colors"
+                    </motion.button>
+                    <motion.div
+                      whileHover={buttonHover}
+                      whileTap={buttonTap}
                     >
-                      Details <ChevronRight size={16} />
-                    </Link>
+                      <Link
+                        href={`/products/${product.slug}`}
+                        className="flex items-center justify-center py-3 border border-slate-200 text-slate-700 text-sm font-bold rounded hover:bg-slate-50 transition-colors"
+                      >
+                        Details <ChevronRight size={16} />
+                      </Link>
+                    </motion.div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))
           ) : (
-            <div className="col-span-full text-center py-20 text-slate-400">
+            <motion.div 
+              className="col-span-full text-center py-20 text-slate-400"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
               <p className="text-lg">
-                No products found matching "{searchQuery}"
+                No products found matching &quot;{searchQuery}&quot;
               </p>
-              <button
+              <motion.button
                 onClick={() => {
                   setSearchQuery("");
                   setActiveCategory("All");
                 }}
                 className="mt-4 text-amber-600 hover:underline"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 Clear Filters
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
           )}
-        </div>
+          </AnimatePresence>
+        </motion.div>
       </section>
 
       {/* ================= CATALOG DOWNLOAD CTA ================= */}
@@ -319,15 +376,27 @@ export default function ProductsPage() {
       </section>
 
       {/* ================= QUOTE MODAL (Reused) ================= */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-opacity animate-in fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 bg-slate-100 rounded-full p-1"
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            {...modalBackdrop}
+            onClick={() => setIsModalOpen(false)}
+          >
+            <motion.div
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative"
+              {...modalContent}
+              onClick={(e) => e.stopPropagation()}
             >
-              <X size={20} />
-            </button>
+              <motion.button
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 bg-slate-100 rounded-full p-1 z-10"
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                transition={springTransition}
+              >
+                <X size={20} />
+              </motion.button>
 
             <div className="bg-amber-500 p-6">
               <h3 className="text-xl font-bold text-black">Get Best Price</h3>
@@ -371,14 +440,19 @@ export default function ProductsPage() {
                     placeholder="e.g. Mehsana"
                   />
                 </div>
-                <button className="w-full bg-slate-900 text-white font-bold py-4 rounded hover:bg-slate-800 transition mt-2">
+                <motion.button 
+                  className="w-full bg-slate-900 text-white font-bold py-4 rounded mt-2"
+                  whileHover={buttonHover}
+                  whileTap={buttonTap}
+                >
                   Request Quote
-                </button>
+                </motion.button>
               </form>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

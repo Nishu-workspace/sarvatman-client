@@ -40,7 +40,7 @@ export default function Home() {
       slug: "kerb-paver-skm-60",
       category: "Compact Pavers",
       description:
-        "India's most trusted compact kerb paver. Ideal for tight spaces and rapid road edge construction.",
+        "India's most trusted compact kerb paver. Ideal for spaces and rapid road edge construction.",
       specs: ["16HP Air Cooled", "Width: 600mm"], // Shortened for cleaner UI
       image: img1.src,
     },

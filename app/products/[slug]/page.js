@@ -160,13 +160,16 @@ export default function ProductPage() {
           <div className="lg:w-2/3 space-y-8">
             {/* Product Image Area */}
             <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-              <div className="aspect-video bg-slate-100 rounded-xl relative overflow-hidden flex items-center justify-center group">
-                {/* Replace src with actual image variable */}
-                <img
-                  src="/api/placeholder/800/600"
-                  alt={product.name}
-                  className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
-                />
+              <div className="aspect-video bg-slate-100 rounded-xl relative overflow-hidden flex items-center justify-center group mb-4">
+                {product.imageUrl ? (
+                  <img
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="text-slate-400 font-medium">No Image Available</div>
+                )}
                 <div className="absolute top-4 left-4 bg-amber-500 text-black px-3 py-1 text-xs font-bold uppercase tracking-wider rounded">
                   Best Seller
                 </div>
@@ -257,19 +260,26 @@ export default function ProductPage() {
             )}
 
             {/* Brochure Download */}
-            <div className="bg-slate-900 text-white p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4">
-              <div>
-                <h4 className="font-bold text-lg">
-                  Download Technical Brochure
-                </h4>
-                <p className="text-slate-400 text-sm">
-                  Get detailed diagrams, dimensions, and performance charts.
-                </p>
+            {product.brochureUrl && (
+              <div className="bg-slate-900 text-white p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 mt-8">
+                <div>
+                  <h4 className="font-bold text-lg">
+                    Download Technical Brochure
+                  </h4>
+                  <p className="text-slate-400 text-sm">
+                    Get detailed diagrams, dimensions, and performance charts.
+                  </p>
+                </div>
+                <a
+                  href={product.brochureUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-amber-500 text-black px-6 py-3 rounded font-bold hover:bg-amber-400 transition"
+                >
+                  <Download size={18} /> Download PDF
+                </a>
               </div>
-              <button className="flex items-center gap-2 bg-amber-500 text-black px-6 py-3 rounded font-bold hover:bg-amber-400 transition">
-                <Download size={18} /> Download PDF
-              </button>
-            </div>
+            )}
           </div>
 
           {/* RIGHT COLUMN: Sticky Quote Form */}

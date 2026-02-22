@@ -313,14 +313,19 @@ export default function ProductsPage() {
                     href={`/products/${product.slug}`}
                     className="relative h-56 bg-slate-100 flex items-center justify-center overflow-hidden"
                   >
-                    {/* Replace with Next/Image in real app */}
-                    <motion.img
-                      src={product.image}
-                      alt={product.name}
-                      className="max-h-full max-w-full object-contain p-4"
-                      whileHover={{ scale: 1.1 }}
-                      transition={springTransition}
-                    />
+                    {product.imageUrl ? (
+                      <motion.img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="max-h-full max-w-full object-contain p-4"
+                        whileHover={{ scale: 1.1 }}
+                        transition={springTransition}
+                      />
+                    ) : (
+                      <div className="text-slate-300 flex flex-col items-center">
+                        <span className="text-sm font-medium">No Image</span>
+                      </div>
+                    )}
                     <motion.div
                       className="absolute top-4 left-4 bg-slate-900 text-white text-[10px] font-bold uppercase px-2 py-1 rounded tracking-wider"
                       initial={{ opacity: 0, y: -10 }}
@@ -411,12 +416,16 @@ export default function ProductsPage() {
             Download 2025 Catalogue
           </h2>
           <p className="text-slate-400 mb-8 max-w-xl mx-auto">
-            Get the full technical specifications for the SP 1080, SKM 540, and
-            our entire range of infrastructure machinery in one PDF.
+            Get the full technical specifications for our entire range of infrastructure machinery in one PDF.
           </p>
-          <button className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded font-bold hover:bg-gray-200 transition">
+          <a
+            href="/general-brochure.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded font-bold hover:bg-gray-200 transition"
+          >
             <Download size={20} /> Download PDF Brochure
-          </button>
+          </a>
         </div>
       </section>
 

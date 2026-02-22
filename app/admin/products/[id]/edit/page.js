@@ -16,6 +16,8 @@ export default function EditProductPage() {
         slug: "",
         category: "",
         description: "",
+        imageUrl: "",
+        brochureUrl: "",
         status: "draft",
         features: [""],
         displaySpecs: [{ key: "", value: "" }],
@@ -23,6 +25,35 @@ export default function EditProductPage() {
     });
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const [uploadingBrochure, setUploadingBrochure] = useState(false);
+
+    const handleFileUpload = async (e, type) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const setUploading = type === "image" ? setUploadingImage : setUploadingBrochure;
+        const fieldName = type === "image" ? "imageUrl" : "brochureUrl";
+
+        const formDataFile = new FormData();
+        formDataFile.append("file", file);
+
+        try {
+            setUploading(true);
+            const res = await api.post("/upload", formDataFile, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+            if (res.data.success) {
+                setFormData(prev => ({ ...prev, [fieldName]: res.data.url }));
+                toast.success(`${type === "image" ? "Image" : "Brochure"} uploaded successfully!`);
+            }
+        } catch (err) {
+            console.error(`Failed to upload ${type}`, err);
+            toast.error(`Failed to upload ${type}`);
+        } finally {
+            setUploading(false);
+        }
+    };
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -44,6 +75,8 @@ export default function EditProductPage() {
                         slug: product.slug || "",
                         category: product.category || "",
                         description: product.description || "",
+                        imageUrl: product.imageUrl || "",
+                        brochureUrl: product.brochureUrl || "",
                         status: product.status || "draft",
                         features: product.features && product.features.length > 0 ? product.features : [""],
                         displaySpecs: parseSpecs(product.displaySpecs),
@@ -186,6 +219,41 @@ export default function EditProductPage() {
                                 <option value="published">Published</option>
                                 <option value="archived">Archived</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Product Image</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleFileUpload(e, "image")}
+                                className="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none text-slate-900 bg-white"
+                                disabled={uploadingImage}
+                            />
+                            {uploadingImage && <p className="text-sm text-slate-500 mt-1">Uploading...</p>}
+                            {formData.imageUrl && (
+                                <div className="mt-2">
+                                    <img src={formData.imageUrl} alt="Preview" className="h-32 object-contain border border-slate-200 rounded" />
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Brochure (PDF)</label>
+                            <input
+                                type="file"
+                                accept="application/pdf"
+                                onChange={(e) => handleFileUpload(e, "brochure")}
+                                className="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none text-slate-900 bg-white"
+                                disabled={uploadingBrochure}
+                            />
+                            {uploadingBrochure && <p className="text-sm text-slate-500 mt-1">Uploading...</p>}
+                            {formData.brochureUrl && (
+                                <div className="mt-2 text-sm text-slate-600">
+                                    Current Brochure: <a href={formData.brochureUrl} target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:text-amber-700 underline">View PDF</a>
+                                </div>
+                            )}
                         </div>
                     </div>
 

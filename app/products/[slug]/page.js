@@ -1,7 +1,10 @@
 "use client"; // Needed for interactive elements like buttons/forms
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import toast from "react-hot-toast";
+import api from "../../../lib/api";
 import {
   Phone,
   Menu,
@@ -20,30 +23,67 @@ import {
 // import productImg from "../../../public/images/slip_form_paver.png";
 
 export default function ProductPage() {
-  // Mock Data for this specific page (In real app, fetch this based on ID)
-  const product = {
-    name: "Slip Form Paver",
-    model: "SP-1080",
-    tagline: "High-Precision Concrete Paving for Highways & Canals",
-    price: "Call for Price", // Never show high-ticket prices online
-    description:
-      "The SP-1080 is our flagship slipform paver designed for the Indian infrastructure sector. It offers fully automatic leveling and steering, ensuring concrete structures (kerbs, crash barriers, dividers) are laid with millimeter precision. Built with a heavy-duty chassis to withstand continuous operation in extreme heat.",
-    features: [
-      "Automatic Electronic Sensor Paver (MOBA System Compatible)",
-      "Paving Speed: Up to 3 meters/minute",
-      "Low Fuel Consumption: 4-5 Ltrs/Hour",
-      "Zero Slump Concrete handling capacity",
-      "Compact design for single-lane road operation",
-    ],
-    specs: [
-      { label: "Paving Width", value: "Max 1800 mm" },
-      { label: "Paving Height", value: "Max 1200 mm" },
-      { label: "Engine Power", value: "60 HP @ 2200 RPM (Kirloskar)" },
-      { label: "Operating Weight", value: "4,500 KG" },
-      { label: "Drive System", value: "All Track Hydraulic Drive" },
-      { label: "Hopper Capacity", value: "0.75 Cubic Meter" },
-    ],
+  const params = useParams();
+  const slug = params?.slug;
+
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const [inquiryData, setInquiryData] = useState({ name: "", phone: "", location: "", email: "" });
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await api.get(`/products/${slug}`);
+        setProduct(res.data.data);
+      } catch (err) {
+        console.error("Failed to load product", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (slug) fetchProduct();
+  }, [slug]);
+
+  const handleInquirySubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await api.post("/inquiries", {
+        customer: {
+          name: inquiryData.name,
+          phone: inquiryData.phone,
+          company: inquiryData.location,
+          email: inquiryData.email || "no-email@provided.com"
+        },
+        message: `Inquiry for product: ${product?.name} (${product?.model || slug})`
+      });
+      toast.success("Inquiry submitted successfully! We will contact you soon.");
+      setInquiryData({ name: "", phone: "", location: "", email: "" });
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to submit inquiry. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-slate-50 flex items-center justify-center p-10">
+        <p className="text-xl font-bold">Loading product details...</p>
+      </main>
+    );
+  }
+
+  if (!product) {
+    return (
+      <main className="min-h-screen bg-slate-50 flex items-center justify-center p-10">
+        <p className="text-xl font-bold">Product not found.</p>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 font-sans text-slate-800">
@@ -166,51 +206,55 @@ export default function ProductPage() {
             </div>
 
             {/* Key Features List */}
-            <div className="bg-white p-6 rounded-xl border border-slate-200">
-              <h3 className="text-xl font-bold text-slate-900 mb-4">
-                Why choose the {product.model}?
-              </h3>
-              <ul className="grid md:grid-cols-2 gap-y-3 gap-x-8">
-                {product.features.map((feature, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-start gap-3 text-slate-700"
-                  >
-                    <CheckCircle2
-                      className="text-amber-500 shrink-0 mt-0.5"
-                      size={18}
-                    />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {product.features && product.features.length > 0 && (
+              <div className="bg-white p-6 rounded-xl border border-slate-200 mt-8 mb-8">
+                <h3 className="text-xl font-bold text-slate-900 mb-4">
+                  Why choose the {product.model || product.name}?
+                </h3>
+                <ul className="grid md:grid-cols-2 gap-y-3 gap-x-8">
+                  {product.features.map((feature, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-start gap-3 text-slate-700"
+                    >
+                      <CheckCircle2
+                        className="text-amber-500 shrink-0 mt-0.5"
+                        size={18}
+                      />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Technical Specifications Table */}
-            <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-4">
-                Technical Specifications
-              </h3>
-              <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                <table className="w-full text-sm text-left">
-                  <tbody>
-                    {product.specs.map((spec, idx) => (
-                      <tr
-                        key={idx}
-                        className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
-                      >
-                        <th className="px-6 py-4 font-medium text-slate-900 w-1/3 bg-slate-50/50">
-                          {spec.label}
-                        </th>
-                        <td className="px-6 py-4 text-slate-600">
-                          {spec.value}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {product.allSpecs && Object.keys(product.allSpecs).length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-slate-900 mb-4">
+                  Technical Specifications
+                </h3>
+                <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                  <table className="w-full text-sm text-left">
+                    <tbody>
+                      {Object.entries(product.allSpecs).map(([label, value], idx) => (
+                        <tr
+                          key={idx}
+                          className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                        >
+                          <th className="px-6 py-4 font-medium text-slate-900 w-1/3 bg-slate-50/50">
+                            {label}
+                          </th>
+                          <td className="px-6 py-4 text-slate-600">
+                            {value}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Brochure Download */}
             <div className="bg-slate-900 text-white p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4">
@@ -248,15 +292,31 @@ export default function ProductPage() {
                   </p>
                 </div>
 
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={handleInquirySubmit}>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
                       Name
                     </label>
                     <input
                       type="text"
+                      required
+                      value={inquiryData.name}
+                      onChange={(e) => setInquiryData({ ...inquiryData, name: e.target.value })}
                       className="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
                       placeholder="Your Name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={inquiryData.email}
+                      onChange={(e) => setInquiryData({ ...inquiryData, email: e.target.value })}
+                      className="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
+                      placeholder="rajesh@company.com"
                     />
                   </div>
                   <div>
@@ -265,6 +325,9 @@ export default function ProductPage() {
                     </label>
                     <input
                       type="tel"
+                      required
+                      value={inquiryData.phone}
+                      onChange={(e) => setInquiryData({ ...inquiryData, phone: e.target.value })}
                       className="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
                       placeholder="+91"
                     />
@@ -275,15 +338,18 @@ export default function ProductPage() {
                     </label>
                     <input
                       type="text"
+                      value={inquiryData.location}
+                      onChange={(e) => setInquiryData({ ...inquiryData, location: e.target.value })}
                       className="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
                       placeholder="e.g. L&T Construction, Surat"
                     />
                   </div>
                   <button
-                    type="button"
-                    className="w-full bg-slate-900 text-white font-bold py-3 rounded hover:bg-slate-800 transition"
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-slate-900 text-white font-bold py-3 rounded hover:bg-slate-800 transition disabled:opacity-50"
                   >
-                    Get Best Price Now
+                    {submitting ? "Submitting..." : "Get Best Price Now"}
                   </button>
                 </form>
 

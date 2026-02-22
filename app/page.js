@@ -104,7 +104,7 @@ export default function Home() {
     <main className="min-h-screen bg-white font-sans text-slate-800">
       {/* ================= FAB (Floating Action Buttons) ================= */}
       {/* Vital for mobile conversion */}
-      <motion.div 
+      <motion.div
         className="fixed bottom-6 right-6 z-50 flex flex-col gap-3"
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -134,14 +134,14 @@ export default function Home() {
       </motion.div>
 
       {/* ================= HEADER ================= */}
-      <motion.header 
+      <motion.header
         className="sticky top-0 z-40 bg-white shadow-md"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* Top Bar - Hidden on mobile to save space, visible on desktop */}
-        <motion.div 
+        <motion.div
           className="hidden md:flex bg-slate-900 text-slate-300 text-xs py-2 px-6 justify-between items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -163,7 +163,7 @@ export default function Home() {
 
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo */}
-          <motion.div 
+          <motion.div
             className="flex items-center gap-2"
             whileHover={{ scale: 1.05 }}
             transition={springTransition}
@@ -182,7 +182,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + index * 0.1, duration: 0.4 }}
               >
-                <Link 
+                <Link
                   href={item === "Products" ? "/products" : `#${item.toLowerCase().replace(" ", "-")}`}
                   className="hover:text-amber-600 transition-colors relative group"
                 >
@@ -197,7 +197,7 @@ export default function Home() {
 
           {/* CTA Button - Replaced Search with Call Action */}
           <div className="hidden md:flex items-center gap-4">
-            <motion.div 
+            <motion.div
               className="text-right hidden xl:block"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -220,7 +220,7 @@ export default function Home() {
           </div>
 
           {/* Mobile Menu Icon */}
-          <motion.button 
+          <motion.button
             className="lg:hidden text-slate-800 p-2"
             whileTap={{ scale: 0.9 }}
           >
@@ -231,7 +231,7 @@ export default function Home() {
 
       {/* ================= HERO SECTION ================= */}
       <section className="relative bg-slate-900 text-white overflow-hidden min-h-150 flex items-center">
-        <motion.div 
+        <motion.div
           className="absolute inset-0 z-0"
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
@@ -247,19 +247,19 @@ export default function Home() {
         </motion.div>
 
         <div className="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center pt-10">
-          <motion.div 
+          <motion.div
             className="md:w-3/5 space-y-8"
             variants={staggerContainer}
             initial="initial"
             animate="animate"
           >
-            <motion.div 
+            <motion.div
               className="inline-block bg-amber-500 text-black px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-sm"
               variants={staggerItem}
             >
               Heavy Duty Engineering
             </motion.div>
-            <motion.h1 
+            <motion.h1
               className="text-4xl md:text-6xl font-bold leading-tight"
               variants={heroText}
             >
@@ -268,7 +268,7 @@ export default function Home() {
                 Last A Lifetime
               </span>
             </motion.h1>
-            <motion.p 
+            <motion.p
               className="text-lg text-gray-300 max-w-lg leading-relaxed"
               variants={staggerItem}
             >
@@ -305,7 +305,7 @@ export default function Home() {
             </motion.div>
 
             {/* Trust Signal in Hero */}
-            <motion.div 
+            <motion.div
               className="pt-6 border-t border-white/10 flex gap-8"
               variants={staggerItem}
             >
@@ -342,7 +342,7 @@ export default function Home() {
         {/* Background elements omitted for brevity, keeping it clean */}
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12">
-            <motion.div 
+            <motion.div
               className="lg:w-1/2 space-y-8"
               {...slideInLeft}
               viewport={viewportOptions}
@@ -350,13 +350,13 @@ export default function Home() {
               initial="initial"
             >
               <div>
-                <motion.h2 
+                <motion.h2
                   className="text-4xl font-black uppercase tracking-tight text-slate-900 mb-2"
                   {...textReveal}
                 >
                   Slip Form Paver
                 </motion.h2>
-                <motion.p 
+                <motion.p
                   className="text-2xl font-light text-amber-600"
                   {...textReveal}
                   transition={{ delay: 0.1, ...textReveal.transition }}
@@ -365,7 +365,7 @@ export default function Home() {
                 </motion.p>
               </div>
 
-              <motion.p 
+              <motion.p
                 className="text-slate-600 leading-relaxed text-lg"
                 {...textReveal}
                 transition={{ delay: 0.2, ...textReveal.transition }}
@@ -378,14 +378,14 @@ export default function Home() {
                 with our automatic leveling system.
               </motion.p>
 
-              <motion.div 
+              <motion.div
                 className="grid grid-cols-1 md:grid-cols-2 gap-4"
                 variants={staggerContainer}
                 initial="initial"
                 whileInView="animate"
                 viewport={viewportOptions}
               >
-                <motion.div 
+                <motion.div
                   className="bg-slate-50 p-4 rounded-lg border border-slate-100"
                   variants={staggerItem}
                   whileHover={cardHover}
@@ -395,7 +395,7 @@ export default function Home() {
                     Automatic Sensor Leveling
                   </p>
                 </motion.div>
-                <motion.div 
+                <motion.div
                   className="bg-slate-50 p-4 rounded-lg border border-slate-100"
                   variants={staggerItem}
                   whileHover={cardHover}
@@ -405,7 +405,7 @@ export default function Home() {
                 </motion.div>
               </motion.div>
 
-              <motion.button 
+              <motion.button
                 className="flex items-center gap-2 bg-slate-900 text-white px-8 py-4 rounded shadow-xl mt-4"
                 whileHover={buttonHover}
                 whileTap={buttonTap}
@@ -414,11 +414,11 @@ export default function Home() {
               </motion.button>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="lg:w-1/2"
               {...imageReveal}
             >
-              <motion.div 
+              <motion.div
                 className="relative group bg-slate-100 rounded-full p-8 md:p-12"
                 whileHover={{ scale: 1.02 }}
                 transition={springTransition}
@@ -439,14 +439,14 @@ export default function Home() {
       {/* ================= OTHER PRODUCTS ================= */}
       <section className="bg-slate-50 py-24">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="text-center mb-12"
             {...sectionHeader}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
               Machinery For Every Need
             </h2>
-            <motion.div 
+            <motion.div
               className="h-1 w-20 bg-amber-500 mx-auto"
               initial={{ width: 0 }}
               whileInView={{ width: 80 }}
@@ -455,7 +455,7 @@ export default function Home() {
             />
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             initial={{ opacity: 1 }} // Ensure container is visible
             whileInView={{ opacity: 1 }}
@@ -485,7 +485,7 @@ export default function Home() {
                       whileHover={{ scale: 1.1 }}
                       transition={springTransition}
                     />
-                    <motion.div 
+                    <motion.div
                       className="absolute top-4 left-4 bg-slate-900 text-white px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider"
                       initial={{ opacity: 0, y: -10 }}
                       whileInView={{ opacity: 1, y: 0 }}
@@ -565,7 +565,7 @@ export default function Home() {
       {/* ================= WHY CHOOSE US ================= */}
       <section id="why-us" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="text-center max-w-3xl mx-auto mb-16"
             {...sectionHeader}
           >
@@ -574,7 +574,7 @@ export default function Home() {
             </h2>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12"
             variants={staggerContainer}
             initial="initial"
@@ -605,7 +605,7 @@ export default function Home() {
                 whileHover={{ ...cardHover, borderColor: "#f59e0b" }}
                 transition={springTransition}
               >
-                <motion.div 
+                <motion.div
                   className="w-14 h-14 bg-slate-900 text-amber-500 rounded-full flex items-center justify-center mb-6 mx-auto"
                   whileHover={{ rotate: 360, scale: 1.1 }}
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -629,21 +629,21 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-12 items-center">
             {/* Info Side */}
-            <motion.div 
+            <motion.div
               className="md:w-1/2 space-y-8"
               {...slideInLeft}
               viewport={viewportOptions}
               whileInView="animate"
               initial="initial"
             >
-              <motion.h2 
+              <motion.h2
                 className="text-3xl md:text-4xl font-bold"
                 {...textReveal}
               >
                 Come See The Machines <br />
                 <span className="text-amber-500">In Action</span>
               </motion.h2>
-              <motion.p 
+              <motion.p
                 className="text-slate-300 text-lg"
                 {...textReveal}
                 transition={{ delay: 0.1, ...textReveal.transition }}
@@ -653,7 +653,7 @@ export default function Home() {
                 demonstration before you buy.
               </motion.p>
 
-              <motion.div 
+              <motion.div
                 className="space-y-4"
                 variants={staggerContainer}
                 initial="initial"
@@ -705,12 +705,12 @@ export default function Home() {
             </motion.div>
 
             {/* Map/Image Side */}
-            <motion.div 
+            <motion.div
               className="md:w-1/2 w-full h-80 bg-slate-800 rounded-xl overflow-hidden border border-slate-700 relative group"
               {...imageReveal}
             >
               {/* Placeholder for Map or Factory Photo */}
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-600"
                 whileHover={{ scale: 1.02 }}
                 transition={springTransition}
@@ -733,27 +733,27 @@ export default function Home() {
       {/* ================= LEAD FORM CTA ================= */}
       <section id="contact" className="py-20 bg-amber-500">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl mx-auto flex flex-col md:flex-row"
             {...scaleIn}
             viewport={viewportOptions}
             whileInView="animate"
             initial="initial"
           >
-            <motion.div 
+            <motion.div
               className="md:w-1/2 p-10 bg-slate-900 text-white flex flex-col justify-center"
               {...slideInLeft}
               viewport={viewportOptions}
               whileInView="animate"
               initial="initial"
             >
-              <motion.h3 
+              <motion.h3
                 className="text-3xl font-bold mb-4"
                 {...textReveal}
               >
                 Request a Callback
               </motion.h3>
-              <motion.p 
+              <motion.p
                 className="text-slate-300 mb-8"
                 {...textReveal}
                 transition={{ delay: 0.1, ...textReveal.transition }}
@@ -761,7 +761,7 @@ export default function Home() {
                 Leave your details and our senior engineer will call you back
                 within 2 hours with a personalized quote.
               </motion.p>
-              <motion.ul 
+              <motion.ul
                 className="space-y-3"
                 variants={staggerContainer}
                 initial="initial"
@@ -784,7 +784,7 @@ export default function Home() {
               </motion.ul>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="md:w-1/2 p-10"
               {...slideInRight}
               viewport={viewportOptions}
@@ -829,7 +829,7 @@ export default function Home() {
                     <option>Other</option>
                   </select>
                 </motion.div>
-                <motion.button 
+                <motion.button
                   className="w-full bg-amber-500 text-black font-bold py-4 mt-4 rounded"
                   whileHover={buttonHover}
                   whileTap={buttonTap}
@@ -937,7 +937,7 @@ export default function Home() {
               </motion.button>
 
               {/* Header */}
-              <motion.div 
+              <motion.div
                 className="bg-amber-500 p-6"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -951,7 +951,7 @@ export default function Home() {
               </motion.div>
 
               {/* Form */}
-              <motion.div 
+              <motion.div
                 className="p-6 bg-white"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -981,7 +981,7 @@ export default function Home() {
                     </motion.div>
                   ))}
 
-                  <motion.button 
+                  <motion.button
                     className="w-full bg-slate-900 text-white font-bold py-4 rounded shadow-lg mt-2"
                     whileHover={buttonHover}
                     whileTap={buttonTap}
@@ -992,7 +992,7 @@ export default function Home() {
                     Send Me Price List
                   </motion.button>
 
-                  <motion.p 
+                  <motion.p
                     className="text-xs text-center text-slate-400 mt-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

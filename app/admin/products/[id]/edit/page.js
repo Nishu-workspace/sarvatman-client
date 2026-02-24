@@ -21,7 +21,6 @@ export default function EditProductPage() {
         status: "draft",
         features: [""],
         displaySpecs: [{ key: "", value: "" }],
-        allSpecs: [{ key: "", value: "" }],
     });
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
@@ -80,7 +79,6 @@ export default function EditProductPage() {
                         status: product.status || "draft",
                         features: product.features && product.features.length > 0 ? product.features : [""],
                         displaySpecs: parseSpecs(product.displaySpecs),
-                        allSpecs: parseSpecs(product.allSpecs),
                     });
                 }
             } catch (err) {
@@ -143,7 +141,6 @@ export default function EditProductPage() {
             ...formData,
             features: formData.features.filter(f => f.trim() !== ""),
             displaySpecs: formatSpecs(formData.displaySpecs),
-            allSpecs: formatSpecs(formData.allSpecs)
         };
 
         try {
@@ -333,47 +330,6 @@ export default function EditProductPage() {
                                     <button
                                         type="button"
                                         onClick={() => removeSpec("displaySpecs", index)}
-                                        className="bg-red-50 text-red-600 px-3 py-2 rounded hover:bg-red-100 font-bold"
-                                    >
-                                        X
-                                    </button>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* All Specs */}
-                    <div className="pt-4 border-t border-slate-100">
-                        <div className="flex items-center justify-between mb-2">
-                            <label className="block text-sm font-bold text-slate-700">All Technical Specifications</label>
-                            <button
-                                type="button"
-                                onClick={() => addSpec("allSpecs")}
-                                className="text-xs bg-slate-200 text-slate-900 px-3 py-1 rounded font-bold hover:bg-slate-300 transition"
-                            >
-                                + Add Tech Spec
-                            </button>
-                        </div>
-                        {formData.allSpecs.map((spec, index) => (
-                            <div key={index} className="flex gap-2 mb-2">
-                                <input
-                                    type="text"
-                                    value={spec.key}
-                                    onChange={(e) => handleSpecChange("allSpecs", index, "key", e.target.value)}
-                                    className="w-1/3 border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none text-slate-900"
-                                    placeholder="e.g. Operating Weight"
-                                />
-                                <input
-                                    type="text"
-                                    value={spec.value}
-                                    onChange={(e) => handleSpecChange("allSpecs", index, "value", e.target.value)}
-                                    className="flex-1 border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
-                                    placeholder="e.g. 14000 Kg"
-                                />
-                                {formData.allSpecs.length > 1 && (
-                                    <button
-                                        type="button"
-                                        onClick={() => removeSpec("allSpecs", index)}
                                         className="bg-red-50 text-red-600 px-3 py-2 rounded hover:bg-red-100 font-bold"
                                     >
                                         X

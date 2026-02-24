@@ -36,6 +36,7 @@ export default function ProductPage() {
     const fetchProduct = async () => {
       try {
         const res = await api.get(`/products/${slug}`);
+        console.log(res.data.data)
         setProduct(res.data.data);
       } catch (err) {
         console.error("Failed to load product", err);
@@ -232,7 +233,7 @@ export default function ProductPage() {
             )}
 
             {/* Technical Specifications Table */}
-            {product.allSpecs && Object.keys(product.allSpecs).length > 0 && (
+            {product.displaySpecs && Object.keys(product.displaySpecs).length > 0 && (
               <div className="mb-8">
                 <h3 className="text-xl font-bold text-slate-900 mb-4">
                   Technical Specifications
@@ -240,7 +241,7 @@ export default function ProductPage() {
                 <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
                   <table className="w-full text-sm text-left">
                     <tbody>
-                      {Object.entries(product.allSpecs).map(([label, value], idx) => (
+                      {Object.entries(product.displaySpecs).map(([label, value], idx) => (
                         <tr
                           key={idx}
                           className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
@@ -271,7 +272,7 @@ export default function ProductPage() {
                   </p>
                 </div>
                 <a
-                  href={product.brochureUrl}
+                  href={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUD_NAME}/raw/upload/fl_attachment/${encodeURIComponent(product.public_id)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-amber-500 text-black px-6 py-3 rounded font-bold hover:bg-amber-400 transition"

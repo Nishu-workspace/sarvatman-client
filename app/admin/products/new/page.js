@@ -15,10 +15,10 @@ export default function NewProductPage() {
         description: "",
         imageUrl: "",
         brochureUrl: "",
+        public_id: "",
         status: "draft",
         features: [""], // Initialize with one empty feature
         displaySpecs: [{ key: "", value: "" }], // Array of key-value pairs
-        allSpecs: [{ key: "", value: "" }],
     });
     const [loading, setLoading] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
@@ -33,14 +33,21 @@ export default function NewProductPage() {
 
         const formDataFile = new FormData();
         formDataFile.append("file", file);
+        formDataFile.append("upload_preset", "SarvatmanImages")
+        if (fieldName == 'brochureUrl') {
+            formDataFile.append('resource_type', 'raw')
 
+        }
         try {
             setUploading(true);
+
             const res = await api.post("/upload", formDataFile, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             if (res.data.success) {
-                setFormData(prev => ({ ...prev, [fieldName]: res.data.url }));
+                console.log(res.data)
+
+                setFormData(prev => ({ ...prev, [fieldName]: res.data.url, public_id: res.data.public_id }));
                 toast.success(`${type === "image" ? "Image" : "Brochure"} uploaded successfully!`);
             }
         } catch (err) {
@@ -102,7 +109,6 @@ export default function NewProductPage() {
             ...formData,
             features: formData.features.filter(f => f.trim() !== ""),
             displaySpecs: formatSpecs(formData.displaySpecs),
-            allSpecs: formatSpecs(formData.allSpecs)
         };
 
         try {
@@ -292,47 +298,6 @@ export default function NewProductPage() {
                                     <button
                                         type="button"
                                         onClick={() => removeSpec("displaySpecs", index)}
-                                        className="bg-red-50 text-red-600 px-3 py-2 rounded hover:bg-red-100 font-bold"
-                                    >
-                                        X
-                                    </button>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* All Specs */}
-                    <div className="pt-4 border-t border-slate-100">
-                        <div className="flex items-center justify-between mb-2">
-                            <label className="block text-sm font-bold text-slate-700">All Technical Specifications</label>
-                            <button
-                                type="button"
-                                onClick={() => addSpec("allSpecs")}
-                                className="text-xs bg-slate-200 text-slate-900 px-3 py-1 rounded font-bold hover:bg-slate-300 transition"
-                            >
-                                + Add Tech Spec
-                            </button>
-                        </div>
-                        {formData.allSpecs.map((spec, index) => (
-                            <div key={index} className="flex gap-2 mb-2">
-                                <input
-                                    type="text"
-                                    value={spec.key}
-                                    onChange={(e) => handleSpecChange("allSpecs", index, "key", e.target.value)}
-                                    className="w-1/3 border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
-                                    placeholder="e.g. Operating Weight"
-                                />
-                                <input
-                                    type="text"
-                                    value={spec.value}
-                                    onChange={(e) => handleSpecChange("allSpecs", index, "value", e.target.value)}
-                                    className="flex-1 border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
-                                    placeholder="e.g. 14000 Kg"
-                                />
-                                {formData.allSpecs.length > 1 && (
-                                    <button
-                                        type="button"
-                                        onClick={() => removeSpec("allSpecs", index)}
                                         className="bg-red-50 text-red-600 px-3 py-2 rounded hover:bg-red-100 font-bold"
                                     >
                                         X

@@ -175,24 +175,31 @@ export default function Home() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-8 font-medium text-sm uppercase tracking-wide">
-            {["Products", "Visit Factory", "Why Us"].map((item, index) => (
-              <motion.div
-                key={item}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + index * 0.1, duration: 0.4 }}
-              >
-                <Link
-                  href={item === "Products" ? "/products" : `#${item.toLowerCase().replace(" ", "-")}`}
-                  className="hover:text-amber-600 transition-colors relative group"
+            {["Products", "About Us", "Contact Us"].map((item, index) => {
+              let href = `#${item.toLowerCase().replace(" ", "-")}`;
+              if (item === "Products") href = "/products";
+              if (item === "About Us") href = "/about";
+              if (item === "Contact Us") href = "/contact";
+
+              return (
+                <motion.div
+                  key={item}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 + index * 0.1, duration: 0.4 }}
                 >
-                  {item}
-                  <motion.span
-                    className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-600 group-hover:w-full transition-all duration-300"
-                  />
-                </Link>
-              </motion.div>
-            ))}
+                  <Link
+                    href={href}
+                    className="hover:text-amber-600 transition-colors relative group"
+                  >
+                    {item}
+                    <motion.span
+                      className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-600 group-hover:w-full transition-all duration-300"
+                    />
+                  </Link>
+                </motion.div>
+              )
+            })}
           </nav>
 
           {/* CTA Button - Replaced Search with Call Action */}
@@ -406,11 +413,13 @@ export default function Home() {
               </motion.div>
 
               <motion.button
-                className="flex items-center gap-2 bg-slate-900 text-white px-8 py-4 rounded shadow-xl mt-4"
+                className="group flex items-center gap-3 bg-slate-900 text-white font-medium px-8 py-4 rounded-lg shadow-lg hover:shadow-xl mt-4 overflow-hidden relative"
                 whileHover={buttonHover}
                 whileTap={buttonTap}
               >
-                Download Brochure <ArrowRight size={18} />
+                <span className="relative z-10">Download Brochure</span>
+                <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                <div className="absolute inset-0 bg-slate-800 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out z-0"></div>
               </motion.button>
             </motion.div>
 
@@ -419,14 +428,17 @@ export default function Home() {
               {...imageReveal}
             >
               <motion.div
-                className="relative group bg-slate-100 rounded-full p-8 md:p-12"
+                className="relative group bg-slate-50/50 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-inner border border-slate-100"
                 whileHover={{ scale: 1.02 }}
                 transition={springTransition}
               >
+                {/* Decorative background accent */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-amber-100/30 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
                 <motion.img
                   src={slipPaver.src}
                   alt="Sarvatman Slip Form Paver SP 1080"
-                  className="w-full h-auto object-contain drop-shadow-2xl"
+                  className="w-full h-auto object-contain drop-shadow-xl relative z-10"
                   whileHover={{ scale: 1.05 }}
                   transition={springTransition}
                 />

@@ -29,14 +29,19 @@ export default function ProductPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [inquiryData, setInquiryData] = useState({ name: "", phone: "", location: "", email: "" });
+  const [inquiryData, setInquiryData] = useState({
+    name: "",
+    phone: "",
+    location: "",
+    email: "",
+  });
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const res = await api.get(`/products/${slug}`);
-        console.log(res.data.data)
+        console.log(res.data.data);
         setProduct(res.data.data);
       } catch (err) {
         console.error("Failed to load product", err);
@@ -56,11 +61,13 @@ export default function ProductPage() {
           name: inquiryData.name,
           phone: inquiryData.phone,
           company: inquiryData.location,
-          email: inquiryData.email || "no-email@provided.com"
+          email: inquiryData.email || "no-email@provided.com",
         },
-        message: `Inquiry for product: ${product?.name} (${product?.model || slug})`
+        message: `Inquiry for product: ${product?.name} (${product?.model || slug})`,
       });
-      toast.success("Inquiry submitted successfully! We will contact you soon.");
+      toast.success(
+        "Inquiry submitted successfully! We will contact you soon.",
+      );
       setInquiryData({ name: "", phone: "", location: "", email: "" });
     } catch (err) {
       console.error(err);
@@ -169,7 +176,9 @@ export default function ProductPage() {
                     className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
                   />
                 ) : (
-                  <div className="text-slate-400 font-medium">No Image Available</div>
+                  <div className="text-slate-400 font-medium">
+                    No Image Available
+                  </div>
                 )}
                 <div className="absolute top-4 left-4 bg-amber-500 text-black px-3 py-1 text-xs font-bold uppercase tracking-wider rounded">
                   Best Seller
@@ -233,32 +242,35 @@ export default function ProductPage() {
             )}
 
             {/* Technical Specifications Table */}
-            {product.displaySpecs && Object.keys(product.displaySpecs).length > 0 && (
-              <div className="mb-8">
-                <h3 className="text-xl font-bold text-slate-900 mb-4">
-                  Technical Specifications
-                </h3>
-                <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                  <table className="w-full text-sm text-left">
-                    <tbody>
-                      {Object.entries(product.displaySpecs).map(([label, value], idx) => (
-                        <tr
-                          key={idx}
-                          className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
-                        >
-                          <th className="px-6 py-4 font-medium text-slate-900 w-1/3 bg-slate-50/50">
-                            {label}
-                          </th>
-                          <td className="px-6 py-4 text-slate-600">
-                            {value}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+            {product.displaySpecs &&
+              Object.keys(product.displaySpecs).length > 0 && (
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-slate-900 mb-4">
+                    Technical Specifications
+                  </h3>
+                  <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                    <table className="w-full text-sm text-left">
+                      <tbody>
+                        {Object.entries(product.displaySpecs).map(
+                          ([label, value], idx) => (
+                            <tr
+                              key={idx}
+                              className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                            >
+                              <th className="px-6 py-4 font-medium text-slate-900 w-1/3 bg-slate-50/50">
+                                {label}
+                              </th>
+                              <td className="px-6 py-4 text-slate-600">
+                                {value}
+                              </td>
+                            </tr>
+                          ),
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Brochure Download */}
             {product.brochureUrl && (
@@ -272,7 +284,7 @@ export default function ProductPage() {
                   </p>
                 </div>
                 <a
-                  href={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUD_NAME}/raw/upload/fl_attachment/${encodeURIComponent(product.public_id)}`}
+                  href={`${product.brochureUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-amber-500 text-black px-6 py-3 rounded font-bold hover:bg-amber-400 transition"
@@ -312,7 +324,9 @@ export default function ProductPage() {
                       type="text"
                       required
                       value={inquiryData.name}
-                      onChange={(e) => setInquiryData({ ...inquiryData, name: e.target.value })}
+                      onChange={(e) =>
+                        setInquiryData({ ...inquiryData, name: e.target.value })
+                      }
                       className="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
                       placeholder="Your Name"
                     />
@@ -325,7 +339,12 @@ export default function ProductPage() {
                       type="email"
                       required
                       value={inquiryData.email}
-                      onChange={(e) => setInquiryData({ ...inquiryData, email: e.target.value })}
+                      onChange={(e) =>
+                        setInquiryData({
+                          ...inquiryData,
+                          email: e.target.value,
+                        })
+                      }
                       className="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
                       placeholder="rajesh@company.com"
                     />
@@ -338,7 +357,12 @@ export default function ProductPage() {
                       type="tel"
                       required
                       value={inquiryData.phone}
-                      onChange={(e) => setInquiryData({ ...inquiryData, phone: e.target.value })}
+                      onChange={(e) =>
+                        setInquiryData({
+                          ...inquiryData,
+                          phone: e.target.value,
+                        })
+                      }
                       className="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
                       placeholder="+91"
                     />
@@ -350,7 +374,12 @@ export default function ProductPage() {
                     <input
                       type="text"
                       value={inquiryData.location}
-                      onChange={(e) => setInquiryData({ ...inquiryData, location: e.target.value })}
+                      onChange={(e) =>
+                        setInquiryData({
+                          ...inquiryData,
+                          location: e.target.value,
+                        })
+                      }
                       className="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
                       placeholder="e.g. L&T Construction, Surat"
                     />

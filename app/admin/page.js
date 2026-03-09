@@ -40,7 +40,7 @@ export default function AdminDashboard() {
                         <Package size={32} />
                     </div>
                     <div>
-                        <p className="text-sm text-slate-500 font-medium uppercase tracking-wide">Total Products</p>
+                        <p className="text-sm text-slate-700 font-bold uppercase tracking-wide">Total Products</p>
                         <p className="text-3xl font-bold text-slate-900">{stats.products}</p>
                     </div>
                     <Link href="/admin/products" className="ml-auto text-sm text-amber-600 font-medium hover:underline">
@@ -53,7 +53,7 @@ export default function AdminDashboard() {
                         <MessageSquare size={32} />
                     </div>
                     <div>
-                        <p className="text-sm text-slate-500 font-medium uppercase tracking-wide">Total Inquiries</p>
+                        <p className="text-sm text-slate-700 font-bold uppercase tracking-wide">Total Inquiries</p>
                         <p className="text-3xl font-bold text-slate-900">{stats.inquiries}</p>
                     </div>
                     <Link href="/admin/inquiries" className="ml-auto text-sm text-blue-600 font-medium hover:underline">

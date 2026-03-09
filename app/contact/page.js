@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Send, CheckCircle2 } from "lucide-react";
+import api from "../../lib/api";
 
 export default function ContactUsPage() {
     const [formData, setFormData] = useState({
@@ -14,16 +15,25 @@ export default function ContactUsPage() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            setLoading(false);
+        try {
+            await api.post("/inquiries", {
+                name: formData.name,
+                phone: formData.phone,
+                email: formData.email || "no-email@provided.com",
+                company: "N/A",
+                message: formData.message
+            });
             setSuccess(true);
             setFormData({ name: "", email: "", phone: "", message: "" });
             setTimeout(() => setSuccess(false), 5000);
-        }, 1500);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleChange = (e) => {

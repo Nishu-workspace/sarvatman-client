@@ -29,6 +29,8 @@ import img3 from "../public/images/3B6A8133.jpg";
 import { X } from "lucide-react";
 import { useState, useEffect } from "react";
 import TechincalCards from "../components/TechincalCards";
+import api from "../lib/api";
+import toast from "react-hot-toast";
 import {
   fadeInUp,
   fadeIn,
@@ -54,6 +56,53 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState("General Inquiry");
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
+  const [inquiryData, setInquiryData] = useState({ name: "", phone: "", location: "", email: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [homeInquiryData, setHomeInquiryData] = useState({ name: "", phone: "", interestedMachine: "Kerb Paver SKM-60" });
+  const [homeSubmitting, setHomeSubmitting] = useState(false);
+
+  const handleModalSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await api.post("/inquiries", {
+        name: inquiryData.name,
+        phone: inquiryData.phone,
+        company: inquiryData.location,
+        email: inquiryData.email || "no-email@provided.com",
+        message: `Inquiry for product: ${selectedProduct}`
+      });
+      toast.success("Inquiry submitted successfully! We will contact you soon.");
+      setIsModalOpen(false);
+      setInquiryData({ name: "", phone: "", location: "", email: "" });
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to submit inquiry. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleHomeSubmit = async (e) => {
+    e.preventDefault();
+    setHomeSubmitting(true);
+    try {
+      await api.post("/inquiries", {
+        name: homeInquiryData.name,
+        phone: homeInquiryData.phone,
+        company: "N/A",
+        email: "no-email@provided.com",
+        message: `Callback requested for: ${homeInquiryData.interestedMachine}`
+      });
+      toast.success("Callback requested successfully! We will contact you soon.");
+      setHomeInquiryData({ name: "", phone: "", interestedMachine: "Kerb Paver SKM-60" });
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to request callback. Please try again.");
+    } finally {
+      setHomeSubmitting(false);
+    }
+  };
 
   // Track scroll for header animation
   useEffect(() => {
@@ -102,37 +151,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white font-sans text-slate-800">
-      {/* ================= FAB (Floating Action Buttons) ================= */}
-      {/* Vital for mobile conversion */}
-      <motion.div
-        className="fixed bottom-6 right-6 z-50 flex flex-col gap-3"
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <motion.a
-          href="https://wa.me/919876543210"
-          target="_blank"
-          className="bg-green-500 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
-          aria-label="Chat on WhatsApp"
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          whileTap={{ scale: 0.95 }}
-          transition={springTransition}
-        >
-          <MessageCircle size={28} />
-        </motion.a>
-        <motion.a
-          href="tel:+919876543210"
-          className="bg-amber-500 text-black p-4 rounded-full shadow-lg flex items-center justify-center"
-          aria-label="Call Now"
-          whileHover={{ scale: 1.1, rotate: -5 }}
-          whileTap={{ scale: 0.95 }}
-          transition={springTransition}
-        >
-          <Phone size={28} />
-        </motion.a>
-      </motion.div>
-
       {/* ================= HEADER ================= */}
       <motion.header
         className="sticky top-0 z-40 bg-white shadow-md"
@@ -803,28 +821,25 @@ export default function Home() {
               whileInView="animate"
               initial="initial"
             >
-              <form className="space-y-4">
-                {[
-                  { label: "Your Name", type: "text", placeholder: "Enter name" },
-                  { label: "Phone Number", type: "tel", placeholder: "+91 98765 00000" }
-                ].map((field, index) => (
-                  <motion.div
-                    key={field.label}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={viewportOptions}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                      {field.label}
-                    </label>
-                    <input
-                      type={field.type}
-                      className="w-full border-b border-slate-300 py-2 focus:outline-none focus:border-amber-500 transition-colors"
-                      placeholder={field.placeholder}
-                    />
-                  </motion.div>
-                ))}
+              <form className="space-y-4" onSubmit={handleHomeSubmit}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={viewportOptions}
+                  transition={{ delay: 0.1 }}
+                >
+                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={homeInquiryData.name}
+                    onChange={(e) => setHomeInquiryData({ ...homeInquiryData, name: e.target.value })}
+                    className="w-full border-b border-slate-300 py-2 focus:outline-none focus:border-amber-500 transition-colors bg-white/50"
+                    placeholder="Enter name"
+                  />
+                </motion.div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -832,9 +847,31 @@ export default function Home() {
                   transition={{ delay: 0.2 }}
                 >
                   <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    value={homeInquiryData.phone}
+                    onChange={(e) => setHomeInquiryData({ ...homeInquiryData, phone: e.target.value })}
+                    className="w-full border-b border-slate-300 py-2 focus:outline-none focus:border-amber-500 transition-colors bg-white/50"
+                    placeholder="+91 98765 00000"
+                  />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={viewportOptions}
+                  transition={{ delay: 0.3 }}
+                >
+                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
                     Interested Machine
                   </label>
-                  <select className="w-full border-b border-slate-300 py-2 focus:outline-none focus:border-amber-500 bg-transparent">
+                  <select
+                    value={homeInquiryData.interestedMachine}
+                    onChange={(e) => setHomeInquiryData({ ...homeInquiryData, interestedMachine: e.target.value })}
+                    className="w-full border-b border-slate-300 py-2 focus:outline-none focus:border-amber-500 bg-white/50"
+                  >
                     <option>Kerb Paver SKM-60</option>
                     <option>Slip Form Paver</option>
                     <option>Road Sweeper</option>
@@ -842,15 +879,17 @@ export default function Home() {
                   </select>
                 </motion.div>
                 <motion.button
-                  className="w-full bg-amber-500 text-black font-bold py-4 mt-4 rounded"
+                  type="submit"
+                  disabled={homeSubmitting}
+                  className="w-full bg-amber-500 text-black font-bold py-4 mt-4 rounded disabled:opacity-50"
                   whileHover={buttonHover}
                   whileTap={buttonTap}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={viewportOptions}
-                  transition={{ delay: 0.3 }}
+                  transition={{ delay: 0.4 }}
                 >
-                  Call Me Back
+                  {homeSubmitting ? "Submitting..." : "Call Me Back"}
                 </motion.button>
               </form>
             </motion.div>
@@ -969,39 +1008,51 @@ export default function Home() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.3 }}
               >
-                <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                  {[
-                    { label: "Your Name", type: "text", placeholder: "e.g. Rajesh Patel", required: true },
-                    { label: "Mobile Number (WhatsApp)", type: "tel", placeholder: "+91 98765 00000", required: true },
-                    { label: "Company / Location", type: "text", placeholder: "e.g. Surat", required: false }
-                  ].map((field, index) => (
-                    <motion.div
-                      key={field.label}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + index * 0.1, duration: 0.3 }}
-                    >
-                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                        {field.label}
-                      </label>
-                      <input
-                        type={field.type}
-                        required={field.required}
-                        className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
-                        placeholder={field.placeholder}
-                      />
-                    </motion.div>
-                  ))}
+                <form className="space-y-4" onSubmit={handleModalSubmit}>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3, duration: 0.3 }}
+                  >
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Your Name</label>
+                    <input type="text" required value={inquiryData.name} onChange={(e) => setInquiryData({ ...inquiryData, name: e.target.value })} className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all" placeholder="e.g. Rajesh Patel" />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4, duration: 0.3 }}
+                  >
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Email (Optional)</label>
+                    <input type="email" value={inquiryData.email} onChange={(e) => setInquiryData({ ...inquiryData, email: e.target.value })} className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all" placeholder="rajesh@company.com" />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5, duration: 0.3 }}
+                  >
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Mobile Number (WhatsApp)</label>
+                    <input type="tel" required value={inquiryData.phone} onChange={(e) => setInquiryData({ ...inquiryData, phone: e.target.value })} className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all" placeholder="+91 98765 00000" />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6, duration: 0.3 }}
+                  >
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Company / Location</label>
+                    <input type="text" value={inquiryData.location} onChange={(e) => setInquiryData({ ...inquiryData, location: e.target.value })} className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all" placeholder="e.g. Surat" />
+                  </motion.div>
 
                   <motion.button
-                    className="w-full bg-slate-900 text-white font-bold py-4 rounded shadow-lg mt-2"
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-slate-900 text-white font-bold py-4 rounded shadow-lg mt-2 disabled:opacity-50"
                     whileHover={buttonHover}
                     whileTap={buttonTap}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6, duration: 0.3 }}
+                    transition={{ delay: 0.7, duration: 0.3 }}
                   >
-                    Send Me Price List
+                    {submitting ? "Submitting..." : "Send Me Price List"}
                   </motion.button>
 
                   <motion.p

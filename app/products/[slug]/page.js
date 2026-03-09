@@ -57,12 +57,10 @@ export default function ProductPage() {
     setSubmitting(true);
     try {
       await api.post("/inquiries", {
-        customer: {
-          name: inquiryData.name,
-          phone: inquiryData.phone,
-          company: inquiryData.location,
-          email: inquiryData.email || "no-email@provided.com",
-        },
+        name: inquiryData.name,
+        phone: inquiryData.phone,
+        company: inquiryData.location,
+        email: inquiryData.email || "no-email@provided.com",
         message: `Inquiry for product: ${product?.name} (${product?.model || slug})`,
       });
       toast.success(

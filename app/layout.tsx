@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import FloatingWidget from "../components/FloatingWidget";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
@@ -30,6 +31,7 @@ export default function RootLayout({
       >
         <Toaster position="top-center" />
         {children}
+        <FloatingWidget />
       </body>
     </html>
   );

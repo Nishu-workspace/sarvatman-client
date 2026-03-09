@@ -148,12 +148,10 @@ export default function ProductsPage() {
     setSubmitting(true);
     try {
       await api.post("/inquiries", {
-        customer: {
-          name: inquiryData.name,
-          phone: inquiryData.phone,
-          company: inquiryData.location,
-          email: inquiryData.email || "no-email@provided.com" // required by schema
-        },
+        name: inquiryData.name,
+        phone: inquiryData.phone,
+        company: inquiryData.location,
+        email: inquiryData.email || "no-email@provided.com", // required by schema
         message: `Inquiry for product: ${selectedProduct}`
       });
       toast.success("Inquiry submitted successfully! We will contact you soon.");

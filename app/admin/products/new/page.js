@@ -149,7 +149,7 @@ export default function NewProductPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">
+              <label className="block text-sm font-bold text-slate-900 mb-2">
                 Product Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -163,7 +163,7 @@ export default function NewProductPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">
+              <label className="block text-sm font-bold text-slate-900 mb-2">
                 Slug <span className="text-red-500">*</span>
               </label>
               <input
@@ -180,7 +180,7 @@ export default function NewProductPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">
+              <label className="block text-sm font-bold text-slate-900 mb-2">
                 Category
               </label>
               <input
@@ -193,7 +193,7 @@ export default function NewProductPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">
+              <label className="block text-sm font-bold text-slate-900 mb-2">
                 Status
               </label>
               <select
@@ -211,7 +211,7 @@ export default function NewProductPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">
+              <label className="block text-sm font-bold text-slate-900 mb-2">
                 Product Image
               </label>
               <input
@@ -235,7 +235,7 @@ export default function NewProductPage() {
               )}
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">
+              <label className="block text-sm font-bold text-slate-900 mb-2">
                 Brochure (PDF)
               </label>
               <input
@@ -257,7 +257,7 @@ export default function NewProductPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">
+            <label className="block text-sm font-bold text-slate-900 mb-2">
               Description
             </label>
             <textarea
@@ -272,7 +272,7 @@ export default function NewProductPage() {
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-bold text-slate-700">
+              <label className="block text-sm font-bold text-slate-900">
                 Features
               </label>
               <button
@@ -308,7 +308,7 @@ export default function NewProductPage() {
           {/* Display Specs */}
           <div className="pt-4 border-t border-slate-100">
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-bold text-slate-700">
+              <label className="block text-sm font-bold text-slate-900">
                 Display (Key Highlight) Specs
               </label>
               <button

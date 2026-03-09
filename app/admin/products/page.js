@@ -55,7 +55,7 @@ export default function AdminProductsPage() {
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm uppercase tracking-wide">
+                        <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 text-sm uppercase tracking-wide">
                             <th className="p-4 font-bold">Name</th>
                             <th className="p-4 font-bold">Category</th>
                             <th className="p-4 font-bold">Status</th>
@@ -65,7 +65,7 @@ export default function AdminProductsPage() {
                     <tbody>
                         {products.length === 0 ? (
                             <tr>
-                                <td colSpan="4" className="p-8 text-center text-slate-500">
+                                <td colSpan="4" className="p-8 text-center text-slate-700 font-medium">
                                     No products found. Click "Add Product" to create one.
                                 </td>
                             </tr>
@@ -84,8 +84,8 @@ export default function AdminProductsPage() {
                                             {product.status || "draft"}
                                         </span>
                                     </td>
-                                    <td className="p-4 flex items-center justify-end gap-3 text-slate-500">
-                                        <Link href={`/admin/products/${product._id}/edit`} className="hover:text-blue-600">
+                                    <td className="p-4 flex items-center justify-end gap-3 text-slate-700">
+                                        <Link href={`/admin/products/${product._id}/edit`} className="hover:text-amber-600">
                                             <Edit size={18} />
                                         </Link>
                                         <button onClick={() => handleDelete(product._id)} className="hover:text-red-600">

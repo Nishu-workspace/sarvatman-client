@@ -1,6 +1,11 @@
 "use client";
 
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
 // You will need to install lucide-react if you haven't
 import {
   Menu,
@@ -56,9 +61,18 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState("General Inquiry");
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
-  const [inquiryData, setInquiryData] = useState({ name: "", phone: "", location: "", email: "" });
+  const [inquiryData, setInquiryData] = useState({
+    name: "",
+    phone: "",
+    location: "",
+    email: "",
+  });
   const [submitting, setSubmitting] = useState(false);
-  const [homeInquiryData, setHomeInquiryData] = useState({ name: "", phone: "", interestedMachine: "Kerb Paver SKM-60" });
+  const [homeInquiryData, setHomeInquiryData] = useState({
+    name: "",
+    phone: "",
+    interestedMachine: "Kerb Paver SKM-60",
+  });
   const [homeSubmitting, setHomeSubmitting] = useState(false);
 
   const handleModalSubmit = async (e) => {
@@ -70,9 +84,11 @@ export default function Home() {
         phone: inquiryData.phone,
         company: inquiryData.location,
         email: inquiryData.email || "no-email@provided.com",
-        message: `Inquiry for product: ${selectedProduct}`
+        message: `Inquiry for product: ${selectedProduct}`,
       });
-      toast.success("Inquiry submitted successfully! We will contact you soon.");
+      toast.success(
+        "Inquiry submitted successfully! We will contact you soon.",
+      );
       setIsModalOpen(false);
       setInquiryData({ name: "", phone: "", location: "", email: "" });
     } catch (err) {
@@ -92,10 +108,16 @@ export default function Home() {
         phone: homeInquiryData.phone,
         company: "N/A",
         email: "no-email@provided.com",
-        message: `Callback requested for: ${homeInquiryData.interestedMachine}`
+        message: `Callback requested for: ${homeInquiryData.interestedMachine}`,
       });
-      toast.success("Callback requested successfully! We will contact you soon.");
-      setHomeInquiryData({ name: "", phone: "", interestedMachine: "Kerb Paver SKM-60" });
+      toast.success(
+        "Callback requested successfully! We will contact you soon.",
+      );
+      setHomeInquiryData({
+        name: "",
+        phone: "",
+        interestedMachine: "Kerb Paver SKM-60",
+      });
     } catch (err) {
       console.error(err);
       toast.error("Failed to request callback. Please try again.");
@@ -165,16 +187,16 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <span>Factory: Mehsana, Gujarat, India</span>
+          <span>Factory: Visnagar, Gujarat, India</span>
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1 hover:text-white cursor-pointer">
               <Clock size={14} /> Mon - Sat: 9:00 AM - 7:00 PM
             </span>
             <a
-              href="mailto:sales@sarvatmanroad.com"
+              href="mailto:sarvatmaneco@gmail.com"
               className="hover:text-white hover:underline"
             >
-              sales@sarvatmanroad.com
+              sarvatmaneco@gmail.com
             </a>
           </div>
         </motion.div>
@@ -211,12 +233,10 @@ export default function Home() {
                     className="hover:text-amber-600 transition-colors relative group"
                   >
                     {item}
-                    <motion.span
-                      className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-600 group-hover:w-full transition-all duration-300"
-                    />
+                    <motion.span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-600 group-hover:w-full transition-all duration-300" />
                   </Link>
                 </motion.div>
-              )
+              );
             })}
           </nav>
 
@@ -229,7 +249,7 @@ export default function Home() {
               transition={{ delay: 0.5, duration: 0.4 }}
             >
               <p className="text-xs text-slate-500">Talk to an Engineer</p>
-              <p className="font-bold text-lg leading-none">+91 98765 43210</p>
+              <p className="font-bold text-lg leading-none">+91 9428919894</p>
             </motion.div>
             <motion.a
               href="#contact"
@@ -316,10 +336,7 @@ export default function Home() {
               </motion.button>
 
               {/* Navigates to Page */}
-              <motion.div
-                whileHover={buttonHover}
-                whileTap={buttonTap}
-              >
+              <motion.div whileHover={buttonHover} whileTap={buttonTap}>
                 <Link
                   href="/products/slip-form-paver"
                   className="px-8 py-4 border border-white text-white font-medium rounded hover:bg-white/10 transition flex items-center justify-center gap-2"
@@ -436,15 +453,15 @@ export default function Home() {
                 whileTap={buttonTap}
               >
                 <span className="relative z-10">Download Brochure</span>
-                <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight
+                  size={18}
+                  className="relative z-10 group-hover:translate-x-1 transition-transform"
+                />
                 <div className="absolute inset-0 bg-slate-800 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out z-0"></div>
               </motion.button>
             </motion.div>
 
-            <motion.div
-              className="lg:w-1/2"
-              {...imageReveal}
-            >
+            <motion.div className="lg:w-1/2" {...imageReveal}>
               <motion.div
                 className="relative group bg-slate-50/50 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-inner border border-slate-100"
                 whileHover={{ scale: 1.02 }}
@@ -469,10 +486,7 @@ export default function Home() {
       {/* ================= OTHER PRODUCTS ================= */}
       <section className="bg-slate-50 py-24">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            {...sectionHeader}
-          >
+          <motion.div className="text-center mb-12" {...sectionHeader}>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
               Machinery For Every Need
             </h2>
@@ -500,7 +514,11 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "0px", amount: 0.05 }}
-                transition={{ delay: index * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                transition={{
+                  delay: index * 0.1,
+                  duration: 0.5,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
               >
                 {/* 1. Make Image Clickable via Link */}
                 <div className="w-full relative overflow-hidden">
@@ -615,18 +633,21 @@ export default function Home() {
               {
                 icon: ShieldCheck,
                 title: "Rugged Durability",
-                description: "Engineered to withstand extreme heat and dust. Zero downtime construction."
+                description:
+                  "Engineered to withstand extreme heat and dust. Zero downtime construction.",
               },
               {
                 icon: Wrench,
                 title: "24/7 Parts Support",
-                description: "We are based in Gujarat. Spare parts and mechanic support are just a phone call away."
+                description:
+                  "We are based in Gujarat. Spare parts and mechanic support are just a phone call away.",
               },
               {
                 icon: Trophy,
                 title: "Precision Finishing",
-                description: "Advanced hydraulic systems ensure your road levels pass government inspection every time."
-              }
+                description:
+                  "Advanced hydraulic systems ensure your road levels pass government inspection every time.",
+              },
             ].map((feature, index) => (
               <motion.div
                 key={feature.title}
@@ -645,9 +666,7 @@ export default function Home() {
                 <h3 className="text-lg font-bold text-slate-900 mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-slate-500 text-sm">
-                  {feature.description}
-                </p>
+                <p className="text-slate-500 text-sm">{feature.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -694,13 +713,14 @@ export default function Home() {
                   {
                     icon: MapPin,
                     title: "Factory Address",
-                    content: "Plot No. 123, GIDC Phase II, \nMehsana, Gujarat - 384002"
+                    content:
+                      "Navin Block No. 211, Khata No.843, Behind Atithi Hotel,Visnagar-Unjha Road, Before Tirupati Natural Park, At & Po. Iyasara, Taluka Visanagar, Dist. Mahesana, Gujarat - 384315  ",
                   },
                   {
                     icon: Phone,
                     title: "Call for Appointment",
-                    content: "+91 98765 43210 (Mr. Sharma)"
-                  }
+                    content: "+91 9428919894 (Mr. Patel)",
+                  },
                 ].map((item, index) => (
                   <motion.div
                     key={item.title}
@@ -724,7 +744,7 @@ export default function Home() {
               </motion.div>
 
               <motion.a
-                href="https://maps.google.com"
+                href="https://maps.app.goo.gl/DUayMAgyyNhsPjms6"
                 target="_blank"
                 className="inline-block mt-4 text-amber-500 border-b border-amber-500 pb-1"
                 whileHover={{ color: "#fff", borderColor: "#fff" }}
@@ -745,16 +765,14 @@ export default function Home() {
                 whileHover={{ scale: 1.02 }}
                 transition={springTransition}
               >
-                <span className="flex flex-col items-center gap-2">
-                  <MapPin size={48} />
-                  <span className="text-sm">
-                    Google Map Embed Would Go Here
-                  </span>
-                </span>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d1254.7646184382697!2d72.49433345015295!3d23.711544199125214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sNavin%20Block%20No.%20211%2C%20Khata%20No.843%2C%20Behind%20Atithi%20Hotel%2CVisnagar-Unjha%20Road%2C%20Before%20Tirupati%20Natural%20Park%2C%20At%20%26%20Po.%20Iyasara%2C%20Taluka%20Visanagar%2C%20Dist.%20Mahesana%2C%20Gujarat%20-%20384315!5e0!3m2!1sen!2sin!4v1773117289956!5m2!1sen!2sin"
+                  width="600"
+                  height="450"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
               </motion.div>
-              {/* In production, use an iframe here: 
-                 <iframe src="https://www.google.com/maps/embed?..." width="100%" height="100%" style={{border:0}} allowFullScreen="" loading="lazy"></iframe>
-               */}
             </motion.div>
           </div>
         </div>
@@ -777,10 +795,7 @@ export default function Home() {
               whileInView="animate"
               initial="initial"
             >
-              <motion.h3
-                className="text-3xl font-bold mb-4"
-                {...textReveal}
-              >
+              <motion.h3 className="text-3xl font-bold mb-4" {...textReveal}>
                 Request a Callback
               </motion.h3>
               <motion.p
@@ -801,7 +816,7 @@ export default function Home() {
                 {[
                   "Best Price Guarantee",
                   "Free Technical Consultation",
-                  "Pan-India Delivery"
+                  "Pan-India Delivery",
                 ].map((item, index) => (
                   <motion.li
                     key={item}
@@ -835,7 +850,12 @@ export default function Home() {
                     type="text"
                     required
                     value={homeInquiryData.name}
-                    onChange={(e) => setHomeInquiryData({ ...homeInquiryData, name: e.target.value })}
+                    onChange={(e) =>
+                      setHomeInquiryData({
+                        ...homeInquiryData,
+                        name: e.target.value,
+                      })
+                    }
                     className="w-full border-b border-slate-300 py-2 focus:outline-none focus:border-amber-500 transition-colors bg-white/50"
                     placeholder="Enter name"
                   />
@@ -853,9 +873,14 @@ export default function Home() {
                     type="tel"
                     required
                     value={homeInquiryData.phone}
-                    onChange={(e) => setHomeInquiryData({ ...homeInquiryData, phone: e.target.value })}
+                    onChange={(e) =>
+                      setHomeInquiryData({
+                        ...homeInquiryData,
+                        phone: e.target.value,
+                      })
+                    }
                     className="w-full border-b border-slate-300 py-2 focus:outline-none focus:border-amber-500 transition-colors bg-white/50"
-                    placeholder="+91 98765 00000"
+                    placeholder="+91 9428919894"
                   />
                 </motion.div>
                 <motion.div
@@ -869,7 +894,12 @@ export default function Home() {
                   </label>
                   <select
                     value={homeInquiryData.interestedMachine}
-                    onChange={(e) => setHomeInquiryData({ ...homeInquiryData, interestedMachine: e.target.value })}
+                    onChange={(e) =>
+                      setHomeInquiryData({
+                        ...homeInquiryData,
+                        interestedMachine: e.target.value,
+                      })
+                    }
                     className="w-full border-b border-slate-300 py-2 focus:outline-none focus:border-amber-500 bg-white/50"
                   >
                     <option>Kerb Paver SKM-60</option>
@@ -945,16 +975,19 @@ export default function Home() {
           </div>
           <div>
             <h4 className="text-white font-bold mb-4">Office</h4>
-            <p className="text-sm mb-2">123 Business Hub,</p>
-            <p className="text-sm mb-2">Highway Road, Mehsana,</p>
-            <p className="text-sm">Gujarat - 384002</p>
+            <p className="text-sm mb-2">
+              Navin Block No. 211, Khata No.843, Behind Atithi Hotel, Before
+              Tirupati Natural Park, At & Po. Iyasara
+            </p>
+            <p className="text-sm mb-2">Visnagar-Unjha Road,</p>
+            <p className="text-sm">Gujarat - 384315</p>
           </div>
           <div>
             <h4 className="text-white font-bold mb-4">Contact</h4>
             <p className="text-sm mb-2 hover:text-white cursor-pointer">
-              sales@sarvatmanroad.com
+              sarvatmaneco@gmail.com
             </p>
-            <p className="text-lg font-bold text-amber-500">+91 98765 43210</p>
+            <p className="text-lg font-bold text-amber-500">+91 9428919894</p>
           </div>
         </div>
         <div className="text-center text-xs mt-12 pt-8 border-t border-slate-900">
@@ -1014,32 +1047,83 @@ export default function Home() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3, duration: 0.3 }}
                   >
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Your Name</label>
-                    <input type="text" required value={inquiryData.name} onChange={(e) => setInquiryData({ ...inquiryData, name: e.target.value })} className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all" placeholder="e.g. Rajesh Patel" />
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Your Name
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={inquiryData.name}
+                      onChange={(e) =>
+                        setInquiryData({ ...inquiryData, name: e.target.value })
+                      }
+                      className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                      placeholder="e.g. Rajesh Patel"
+                    />
                   </motion.div>
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4, duration: 0.3 }}
                   >
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Email (Optional)</label>
-                    <input type="email" value={inquiryData.email} onChange={(e) => setInquiryData({ ...inquiryData, email: e.target.value })} className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all" placeholder="rajesh@company.com" />
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Email (Optional)
+                    </label>
+                    <input
+                      type="email"
+                      value={inquiryData.email}
+                      onChange={(e) =>
+                        setInquiryData({
+                          ...inquiryData,
+                          email: e.target.value,
+                        })
+                      }
+                      className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                      placeholder="rajesh@company.com"
+                    />
                   </motion.div>
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5, duration: 0.3 }}
                   >
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Mobile Number (WhatsApp)</label>
-                    <input type="tel" required value={inquiryData.phone} onChange={(e) => setInquiryData({ ...inquiryData, phone: e.target.value })} className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all" placeholder="+91 98765 00000" />
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Mobile Number (WhatsApp)
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={inquiryData.phone}
+                      onChange={(e) =>
+                        setInquiryData({
+                          ...inquiryData,
+                          phone: e.target.value,
+                        })
+                      }
+                      className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                      placeholder="+91 98765 00000"
+                    />
                   </motion.div>
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.6, duration: 0.3 }}
                   >
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Company / Location</label>
-                    <input type="text" value={inquiryData.location} onChange={(e) => setInquiryData({ ...inquiryData, location: e.target.value })} className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all" placeholder="e.g. Surat" />
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Company / Location
+                    </label>
+                    <input
+                      type="text"
+                      value={inquiryData.location}
+                      onChange={(e) =>
+                        setInquiryData({
+                          ...inquiryData,
+                          location: e.target.value,
+                        })
+                      }
+                      className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                      placeholder="e.g. Surat"
+                    />
                   </motion.div>
 
                   <motion.button

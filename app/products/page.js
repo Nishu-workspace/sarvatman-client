@@ -1,116 +1,123 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
+import toast from "react-hot-toast";
+
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, ChevronRight, Phone, Download, X, Menu } from "lucide-react";
 import {
-  Search,
-  Filter,
-  ChevronRight,
-  Phone,
-  CheckCircle2,
-  Download,
-  X,
-  Menu,
-} from "lucide-react";
+  fadeInUp,
+  staggerContainer,
+  staggerItem,
+  viewportOptions,
+  buttonHover,
+  buttonTap,
+  cardHover,
+  modalBackdrop,
+  modalContent,
+  sectionHeader,
+  springTransition,
+} from "../../lib/animations";
+import api from "../../lib/api";
 
 // --- PRODUCT DATA FROM BROCHURE ---
-const allProducts = [
-  // SLIPFORM PAVERS
-  {
-    id: "sp-1080",
-    name: "Slipform Paver SP 1080",
-    category: "Slipform Pavers",
-    image: "/api/placeholder/600/400", // Replace with SP 1080 image
-    tagline: "The Flagship Model for Highway Barriers",
-    specs: [
-      "Engine: Perkins 1100 Series (100 HP)",
-      "Paving Width: Max 1,600 mm",
-      "Paving Height: Max 1,300 mm",
-    ],
-    description:
-      "Designed for offset paving of crash barriers and dividers. Features 3-track stability and fully automatic electronic sensing.",
-    slug: "sp-1080",
-  },
-  {
-    id: "sp-1000",
-    name: "Slipform Paver SP 1000",
-    category: "Slipform Pavers",
-    image: "/api/placeholder/600/400", // Replace with SP 1000 image
-    tagline: "High Capacity & Maneuverability",
-    specs: [
-      "Engine: Perkins 1100 Series (90 HP)",
-      "Paving Width: Max 1,450 mm",
-      "Paving Height: Max 1,050 mm",
-    ],
-    description:
-      "Ideal for specialized high-capacity structures. Compact design with custom mold integration.",
-    slug: "sp-1000",
-  },
+// const allProducts = [
+//   // SLIPFORM PAVERS
+//   {
+//     id: "sp-1080",
+//     name: "Slipform Paver SP 1080",
+//     category: "Slipform Pavers",
+//     image: "/api/placeholder/600/400", // Replace with SP 1080 image
+//     tagline: "The Flagship Model for Highway Barriers",
+//     specs: [
+//       "Engine: Perkins 1100 Series (100 HP)",
+//       "Paving Width: Max 1,600 mm",
+//       "Paving Height: Max 1,300 mm",
+//     ],
+//     description:
+//       "Designed for offset paving of crash barriers and dividers. Features 3-track stability and fully automatic electronic sensing.",
+//     slug: "sp-1080",
+//   },
+//   {
+//     id: "sp-1000",
+//     name: "Slipform Paver SP 1000",
+//     category: "Slipform Pavers",
+//     image: "/api/placeholder/600/400", // Replace with SP 1000 image
+//     tagline: "High Capacity & Maneuverability",
+//     specs: [
+//       "Engine: Perkins 1100 Series (90 HP)",
+//       "Paving Width: Max 1,450 mm",
+//       "Paving Height: Max 1,050 mm",
+//     ],
+//     description:
+//       "Ideal for specialized high-capacity structures. Compact design with custom mold integration.",
+//     slug: "sp-1000",
+//   },
 
-  // KERB PAVERS
-  {
-    id: "skm-540",
-    name: "Kerb Paver SKM 540",
-    category: "Kerb Pavers",
-    image: "/api/placeholder/600/400", // Replace with SKM 540 image
-    tagline: "Premium Hydrostatic Paver",
-    specs: [
-      "Engine: Yanmar 36 HP (Water Cooled)",
-      "Steering: Power Steering (Moba Sensor)",
-      "Max Dimensions: 750mm x 575mm",
-    ],
-    description:
-      "Features fully hydrostatic drive and world-class components like Danfoss hydraulics and Wyco vibrators.",
-    slug: "skm-540",
-  },
-  {
-    id: "skm-60",
-    name: "Kerb Paver SKM 60",
-    category: "Kerb Pavers",
-    image: "/api/placeholder/600/400", // Replace with SKM 60 image
-    tagline: "Compact Ramming Paver",
-    specs: [
-      "Engine: 16 HP Petrol / 10 HP Diesel",
-      "Speed: 60-70 mtr/hour",
-      "Radius: Min 2.4 meters",
-    ],
-    description:
-      "Cost-effective solution for residential and smaller road projects. Uses ramming mechanism for compaction.",
-    slug: "skm-60",
-  },
+//   // KERB PAVERS
+//   {
+//     id: "skm-540",
+//     name: "Kerb Paver SKM 540",
+//     category: "Kerb Pavers",
+//     image: "/api/placeholder/600/400", // Replace with SKM 540 image
+//     tagline: "Premium Hydrostatic Paver",
+//     specs: [
+//       "Engine: Yanmar 36 HP (Water Cooled)",
+//       "Steering: Power Steering (Moba Sensor)",
+//       "Max Dimensions: 750mm x 575mm",
+//     ],
+//     description:
+//       "Features fully hydrostatic drive and world-class components like Danfoss hydraulics and Wyco vibrators.",
+//     slug: "skm-540",
+//   },
+//   {
+//     id: "skm-60",
+//     name: "Kerb Paver SKM 60",
+//     category: "Kerb Pavers",
+//     image: "/api/placeholder/600/400", // Replace with SKM 60 image
+//     tagline: "Compact Ramming Paver",
+//     specs: [
+//       "Engine: 16 HP Petrol / 10 HP Diesel",
+//       "Speed: 60-70 mtr/hour",
+//       "Radius: Min 2.4 meters",
+//     ],
+//     description:
+//       "Cost-effective solution for residential and smaller road projects. Uses ramming mechanism for compaction.",
+//     slug: "skm-60",
+//   },
 
-  // AUXILIARY EQUIPMENT
-  {
-    id: "sccm-750",
-    name: "Hydraulic Road Sweeper",
-    category: "Auxiliary",
-    image: "/api/placeholder/600/400",
-    tagline: "Model: SCCM-750",
-    specs: [
-      "Application: Road Cleaning",
-      "Drive: Hydraulic Motor",
-      "Mounting: Tractor Attached",
-    ],
-    description:
-      "Heavy-duty broom for cleaning road surfaces before asphalt or concrete laying.",
-    slug: "road-sweeper",
-  },
-  {
-    id: "cutting-machines",
-    name: "Concrete Cutting Machines",
-    category: "Auxiliary",
-    image: "/api/placeholder/600/400",
-    tagline: "Models: SCCM 750 / SKCM 610",
-    specs: [
-      "Application: Joint Cutting",
-      "Engine: Diesel / Electric",
-      "Blade: Heavy Duty Diamond",
-    ],
-    description:
-      "Precision cutting machines for creating expansion joints in cured concrete and kerbs.",
-    slug: "cutting-machines",
-  },
-];
+//   // AUXILIARY EQUIPMENT
+//   {
+//     id: "sccm-750",
+//     name: "Hydraulic Road Sweeper",
+//     category: "Auxiliary",
+//     image: "/api/placeholder/600/400",
+//     tagline: "Model: SCCM-750",
+//     specs: [
+//       "Application: Road Cleaning",
+//       "Drive: Hydraulic Motor",
+//       "Mounting: Tractor Attached",
+//     ],
+//     description:
+//       "Heavy-duty broom for cleaning road surfaces before asphalt or concrete laying.",
+//     slug: "road-sweeper",
+//   },
+//   {
+//     id: "cutting-machines",
+//     name: "Concrete Cutting Machines",
+//     category: "Auxiliary",
+//     image: "/api/placeholder/600/400",
+//     tagline: "Models: SCCM 750 / SKCM 610",
+//     specs: [
+//       "Application: Joint Cutting",
+//       "Engine: Diesel / Electric",
+//       "Blade: Heavy Duty Diamond",
+//     ],
+//     description:
+//       "Precision cutting machines for creating expansion joints in cured concrete and kerbs.",
+//     slug: "cutting-machines",
+//   },
+// ];
 
 const categories = ["All", "Slipform Pavers", "Kerb Pavers", "Auxiliary"];
 
@@ -119,16 +126,68 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState("General Inquiry");
+  const [allProducts, setAllProducts] = useState([]);
+  const [inquiryData, setInquiryData] = useState({ name: "", phone: "", location: "", email: "" });
+  const [submitting, setSubmitting] = useState(false);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await api.get("/products");
+        setAllProducts(res.data.data || []);
+      } catch (err) {
+        console.error("Failed to load products", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleInquirySubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await api.post("/inquiries", {
+        name: inquiryData.name,
+        phone: inquiryData.phone,
+        company: inquiryData.location,
+        email: inquiryData.email || "no-email@provided.com", // required by schema
+        message: `Inquiry for product: ${selectedProduct}`
+      });
+      toast.success("Inquiry submitted successfully! We will contact you soon.");
+      setIsModalOpen(false);
+      setInquiryData({ name: "", phone: "", location: "", email: "" });
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to submit inquiry. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const filteredProducts = useMemo(() => {
+    if (!allProducts) return [];
+
+    return allProducts.filter((product) => {
+      const matchesCategory =
+        activeCategory === "All" || product.category === activeCategory;
+
+      const matchesSearch = product.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [allProducts, activeCategory, searchQuery]);
   // Filter Logic
-  const filteredProducts = allProducts.filter((product) => {
-    const matchesCategory =
-      activeCategory === "All" || product.category === activeCategory;
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  // const filteredProducts = allProducts.filter((product) => {
+  //   const matchesCategory =
+  //     activeCategory === "All" || product.category === activeCategory;
+  //   const matchesSearch = product.name
+  //     .toLowerCase()
+  //     .includes(searchQuery.toLowerCase());
+  //   return matchesCategory && matchesSearch;
+  // });
 
   const openQuoteModal = (productName) => {
     setSelectedProduct(productName);
@@ -144,7 +203,7 @@ export default function ProductsPage() {
             href="/"
             className="text-2xl font-bold tracking-tighter text-black"
           >
-            SIDDHIVINAYAK<span className="text-amber-500">.</span>
+            SARVATMAN<span className="text-amber-500">.</span>
           </Link>
           <div className="hidden md:flex items-center gap-6 font-medium text-sm">
             <Link href="/" className="hover:text-amber-600">
@@ -169,18 +228,28 @@ export default function ProductsPage() {
       {/* ================= PAGE TITLE ================= */}
       <section className="bg-slate-900 text-white py-12 md:py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">
+          <motion.h1
+            className="text-3xl md:text-5xl font-bold mb-4"
+            {...sectionHeader}
+          >
             Our Product Range
-          </h1>
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+          </motion.h1>
+          <motion.p
+            className="text-slate-400 max-w-2xl mx-auto text-lg"
+            {...fadeInUp}
+            viewport={viewportOptions}
+            whileInView="animate"
+            initial="initial"
+            transition={{ delay: 0.2, ...fadeInUp.transition }}
+          >
             Manufacturer of Asphalt & Concrete Equipment. From the flagship SP
             1080 to compact kerb pavers.
-          </p>
+          </motion.p>
         </div>
       </section>
 
       {/* ================= CONTROLS (Filter & Search) ================= */}
-      <section className="sticky top-[72px] z-30 bg-white shadow-md py-4">
+      <section className="sticky top-18 z-30 bg-white shadow-md py-4">
         <div className="container mx-auto px-4 flex flex-col md:flex-row gap-4 justify-between items-center">
           {/* Categories */}
           <div className="flex overflow-x-auto pb-2 md:pb-0 gap-2 w-full md:w-auto hide-scrollbar">
@@ -188,11 +257,10 @@ export default function ProductsPage() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
-                  activeCategory === cat
-                    ? "bg-amber-500 text-black"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${activeCategory === cat
+                  ? "bg-amber-500 text-black"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  }`}
               >
                 {cat}
               </button>
@@ -218,88 +286,125 @@ export default function ProductsPage() {
 
       {/* ================= PRODUCT GRID ================= */}
       <section className="py-12 container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl transition-shadow group flex flex-col"
-              >
-                {/* Image Link */}
-                <Link
-                  href={`/products/${product.slug}`}
-                  className="relative h-56 bg-slate-100 flex items-center justify-center overflow-hidden"
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
+          <AnimatePresence mode="wait">
+            {filteredProducts?.length > 0 ? (
+              filteredProducts?.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  className="bg-white rounded-xl border border-slate-200 overflow-hidden group flex flex-col"
+                  variants={staggerItem}
+                  whileHover={cardHover}
+                  transition={springTransition}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
                 >
-                  {/* Replace with Next/Image in real app */}
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="max-h-full max-w-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-4 left-4 bg-slate-900 text-white text-[10px] font-bold uppercase px-2 py-1 rounded tracking-wider">
-                    {product.category}
-                  </div>
-                </Link>
-
-                <div className="p-6 flex-1 flex flex-col">
-                  <Link href={`/products/${product.slug}`}>
-                    <h3 className="text-xl font-bold text-slate-900 mb-1 hover:text-amber-600 transition-colors">
-                      {product.name}
-                    </h3>
-                  </Link>
-                  <p className="text-amber-600 text-xs font-bold uppercase mb-4 tracking-wide">
-                    {product.tagline}
-                  </p>
-
-                  <p className="text-slate-500 text-sm mb-6 line-clamp-2">
-                    {product.description}
-                  </p>
-
-                  {/* Specs Mini List */}
-                  <div className="space-y-2 mb-6 bg-slate-50 p-3 rounded text-xs font-medium text-slate-700">
-                    {product.specs.map((spec, i) => (
-                      <div key={i} className="flex items-start gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5"></div>
-                        <span>{spec}</span>
+                  {/* Image Link */}
+                  <Link
+                    href={`/products/${product.slug}`}
+                    className="relative h-56 bg-slate-100 flex items-center justify-center overflow-hidden"
+                  >
+                    {product.imageUrl ? (
+                      <motion.img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="max-h-full max-w-full object-contain p-4"
+                        whileHover={{ scale: 1.1 }}
+                        transition={springTransition}
+                      />
+                    ) : (
+                      <div className="text-slate-300 flex flex-col items-center">
+                        <span className="text-sm font-medium">No Image</span>
                       </div>
-                    ))}
-                  </div>
+                    )}
+                    <motion.div
+                      className="absolute top-4 left-4 bg-slate-900 text-white text-[10px] font-bold uppercase px-2 py-1 rounded tracking-wider"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      {product.category}
+                    </motion.div>
+                  </Link>
 
-                  {/* Buttons */}
-                  <div className="mt-auto grid grid-cols-2 gap-3">
-                    <button
-                      onClick={() => openQuoteModal(product.name)}
-                      className="py-3 bg-amber-500 text-black text-sm font-bold rounded hover:bg-amber-400 transition-colors"
-                    >
-                      Get Price
-                    </button>
-                    <Link
-                      href={`/products/${product.slug}`}
-                      className="flex items-center justify-center py-3 border border-slate-200 text-slate-700 text-sm font-bold rounded hover:bg-slate-50 transition-colors"
-                    >
-                      Details <ChevronRight size={16} />
+                  <div className="p-6 flex-1 flex flex-col">
+                    <Link href={`/products/${product.slug}`}>
+                      <h3 className="text-xl font-bold text-slate-900 mb-1 hover:text-amber-600 transition-colors">
+                        {product.name}
+                      </h3>
                     </Link>
+                    <p className="text-amber-600 text-xs font-bold uppercase mb-4 tracking-wide">
+                      {product.tagline}
+                    </p>
+
+                    <p className="text-slate-500 text-sm mb-6 line-clamp-2">
+                      {product.description}
+                    </p>
+
+                    {/* Specs Mini List */}
+                    <div className="space-y-2 mb-6 bg-slate-50 p-3 rounded text-xs font-medium text-slate-700">
+                      {product.displaySpecs && Object.entries(product.displaySpecs).map(([key, val], i) => (
+                        <div key={i} className="flex items-start gap-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5"></div>
+                          <span>{key}: {val}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Buttons */}
+                    <div className="mt-auto grid grid-cols-2 gap-3">
+                      <motion.button
+                        onClick={() => openQuoteModal(product.name)}
+                        className="py-3 bg-amber-500 text-black text-sm font-bold rounded"
+                        whileHover={buttonHover}
+                        whileTap={buttonTap}
+                      >
+                        Get Price
+                      </motion.button>
+                      <motion.div whileHover={buttonHover} whileTap={buttonTap}>
+                        <Link
+                          href={`/products/${product.slug}`}
+                          className="flex items-center justify-center py-3 border border-slate-200 text-slate-700 text-sm font-bold rounded hover:bg-slate-50 transition-colors"
+                        >
+                          Details <ChevronRight size={16} />
+                        </Link>
+                      </motion.div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="col-span-full text-center py-20 text-slate-400">
-              <p className="text-lg">
-                No products found matching "{searchQuery}"
-              </p>
-              <button
-                onClick={() => {
-                  setSearchQuery("");
-                  setActiveCategory("All");
-                }}
-                className="mt-4 text-amber-600 hover:underline"
+                </motion.div>
+              ))
+            ) : (
+              <motion.div
+                className="col-span-full text-center py-20 text-slate-400"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
               >
-                Clear Filters
-              </button>
-            </div>
-          )}
-        </div>
+                <p className="text-lg">
+                  No products found matching &quot;{searchQuery}&quot;
+                </p>
+                <motion.button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setActiveCategory("All");
+                  }}
+                  className="mt-4 text-amber-600 hover:underline"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Clear Filters
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </section>
 
       {/* ================= CATALOG DOWNLOAD CTA ================= */}
@@ -309,76 +414,121 @@ export default function ProductsPage() {
             Download 2025 Catalogue
           </h2>
           <p className="text-slate-400 mb-8 max-w-xl mx-auto">
-            Get the full technical specifications for the SP 1080, SKM 540, and
-            our entire range of infrastructure machinery in one PDF.
+            Get the full technical specifications for our entire range of infrastructure machinery in one PDF.
           </p>
-          <button className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded font-bold hover:bg-gray-200 transition">
+          <a
+            href="/general-brochure.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded font-bold hover:bg-gray-200 transition"
+          >
             <Download size={20} /> Download PDF Brochure
-          </button>
+          </a>
         </div>
       </section>
 
       {/* ================= QUOTE MODAL (Reused) ================= */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-opacity animate-in fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 bg-slate-100 rounded-full p-1"
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            {...modalBackdrop}
+            onClick={() => setIsModalOpen(false)}
+          >
+            <motion.div
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative"
+              {...modalContent}
+              onClick={(e) => e.stopPropagation()}
             >
-              <X size={20} />
-            </button>
+              <motion.button
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 bg-slate-100 rounded-full p-1 z-10"
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                transition={springTransition}
+              >
+                <X size={20} />
+              </motion.button>
 
-            <div className="bg-amber-500 p-6">
-              <h3 className="text-xl font-bold text-black">Get Best Price</h3>
-              <p className="text-black/80 text-sm mt-1">
-                Quoting for:{" "}
-                <span className="font-bold">{selectedProduct}</span>
-              </p>
-            </div>
+              <div className="bg-amber-500 p-6">
+                <h3 className="text-xl font-bold text-black">Get Best Price</h3>
+                <p className="text-black/80 text-sm mt-1">
+                  Quoting for:{" "}
+                  <span className="font-bold">{selectedProduct}</span>
+                </p>
+              </div>
 
-            <div className="p-6 bg-white">
-              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500"
-                    placeholder="e.g. Rajesh Patel"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Mobile Number
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500"
-                    placeholder="+91 98765 00000"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500"
-                    placeholder="e.g. Mehsana"
-                  />
-                </div>
-                <button className="w-full bg-slate-900 text-white font-bold py-4 rounded hover:bg-slate-800 transition mt-2">
-                  Request Quote
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
+              <div className="p-6 bg-white">
+                <form
+                  className="space-y-4"
+                  onSubmit={handleInquirySubmit}
+                >
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Your Name
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={inquiryData.name}
+                      onChange={(e) => setInquiryData({ ...inquiryData, name: e.target.value })}
+                      className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500"
+                      placeholder="e.g. Rajesh Patel"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={inquiryData.email}
+                      onChange={(e) => setInquiryData({ ...inquiryData, email: e.target.value })}
+                      className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500"
+                      placeholder="rajesh@company.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Mobile Number
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={inquiryData.phone}
+                      onChange={(e) => setInquiryData({ ...inquiryData, phone: e.target.value })}
+                      className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500"
+                      placeholder="+91 98765 00000"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Location / Company
+                    </label>
+                    <input
+                      type="text"
+                      value={inquiryData.location}
+                      onChange={(e) => setInquiryData({ ...inquiryData, location: e.target.value })}
+                      className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500"
+                      placeholder="e.g. Mehsana"
+                    />
+                  </div>
+                  <motion.button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-slate-900 text-white font-bold py-4 rounded mt-2 disabled:opacity-50"
+                    whileHover={buttonHover}
+                    whileTap={buttonTap}
+                  >
+                    {submitting ? "Submitting..." : "Request Quote"}
+                  </motion.button>
+                </form>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

@@ -119,8 +119,6 @@ import api from "../../lib/api";
 //   },
 // ];
 
-const categories = ["All", "Slipform Pavers", "Kerb Pavers", "Auxiliary"];
-
 export default function ProductsPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -129,6 +127,12 @@ export default function ProductsPage() {
   const [allProducts, setAllProducts] = useState([]);
   const [inquiryData, setInquiryData] = useState({ name: "", phone: "", location: "", email: "" });
   const [submitting, setSubmitting] = useState(false);
+
+  // Build categories dynamically from fetched products
+  const categories = useMemo(() => {
+    const unique = [...new Set(allProducts.map((p) => p.category).filter(Boolean))];
+    return ["All", ...unique];
+  }, [allProducts]);
 
   useEffect(() => {
     const fetchData = async () => {

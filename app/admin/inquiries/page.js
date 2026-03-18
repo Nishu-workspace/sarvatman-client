@@ -157,7 +157,8 @@ export default function AdminInquiriesPage() {
                                             <option value="closed">Closed</option>
                                         </select>
                                     </td>
-                                    <td className="p-4 text-right space-x-2 whitespace-nowrap">
+                                    <td className="p-4 whitespace-nowrap">
+                                        <div className="flex items-center justify-end gap-2">
                                         {inq.customer?.email && inq.customer.email !== "no-email@provided.com" ? (
                                             <a
                                                 href={`mailto:${inq.customer.email}?subject=Re: ${encodeURIComponent(inq.message || 'Your Inquiry to Sarvatman')}`}
@@ -178,6 +179,7 @@ export default function AdminInquiriesPage() {
                                         >
                                             <Trash2 size={18} />
                                         </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))

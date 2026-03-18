@@ -9,11 +9,11 @@ export default function AdminInquiriesPage() {
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState("all");
 
-    // Reply Modal State
-    const [replyModalOpen, setReplyModalOpen] = useState(false);
-    const [selectedInquiry, setSelectedInquiry] = useState(null);
-    const [replyMessage, setReplyMessage] = useState("");
-    const [sendingReply, setSendingReply] = useState(false);
+    // Reply Modal State (commented out — using mailto: for now)
+    // const [replyModalOpen, setReplyModalOpen] = useState(false);
+    // const [selectedInquiry, setSelectedInquiry] = useState(null);
+    // const [replyMessage, setReplyMessage] = useState("");
+    // const [sendingReply, setSendingReply] = useState(false);
 
     const fetchInquiries = async () => {
         try {
@@ -55,36 +55,36 @@ export default function AdminInquiriesPage() {
         }
     };
 
-    const handleReplySubmit = async (e) => {
-        e.preventDefault();
-        if (!replyMessage.trim()) return;
+    // Old reply modal handler (commented out — using mailto: for now)
+    // const handleReplySubmit = async (e) => {
+    //     e.preventDefault();
+    //     if (!replyMessage.trim()) return;
+    //     setSendingReply(true);
+    //     try {
+    //         await api.post(`/admin/inquiries/${selectedInquiry._id}/reply`, { replyMessage });
+    //         setInquiries(
+    //             inquiries.map((inq) => (inq._id === selectedInquiry._id ? { ...inq, status: "responded" } : inq))
+    //         );
+    //         toast.success("Reply sent successfully");
+    //         setReplyModalOpen(false);
+    //         setReplyMessage("");
+    //         setSelectedInquiry(null);
+    //     } catch (err) {
+    //         console.error("Failed to send reply", err);
+    //         toast.error("Failed to send reply");
+    //     } finally {
+    //         setSendingReply(false);
+    //     }
+    // };
 
-        setSendingReply(true);
-        try {
-            await api.post(`/admin/inquiries/${selectedInquiry._id}/reply`, { replyMessage });
-            setInquiries(
-                inquiries.map((inq) => (inq._id === selectedInquiry._id ? { ...inq, status: "responded" } : inq))
-            );
-            toast.success("Reply sent successfully");
-            setReplyModalOpen(false);
-            setReplyMessage("");
-            setSelectedInquiry(null);
-        } catch (err) {
-            console.error("Failed to send reply", err);
-            toast.error("Failed to send reply");
-        } finally {
-            setSendingReply(false);
-        }
-    };
-
-    const openReplyModal = (inq) => {
-        if (!inq.customer?.email || inq.customer.email === "no-email@provided.com") {
-            return toast.error("No valid email address provided for this inquiry.");
-        }
-        setSelectedInquiry(inq);
-        setReplyMessage("");
-        setReplyModalOpen(true);
-    };
+    // const openReplyModal = (inq) => {
+    //     if (!inq.customer?.email || inq.customer.email === "no-email@provided.com") {
+    //         return toast.error("No valid email address provided for this inquiry.");
+    //     }
+    //     setSelectedInquiry(inq);
+    //     setReplyMessage("");
+    //     setReplyModalOpen(true);
+    // };
 
     const filteredInquiries = inquiries.filter(
         (inq) => filter === "all" || inq.status === filter
@@ -158,13 +158,19 @@ export default function AdminInquiriesPage() {
                                         </select>
                                     </td>
                                     <td className="p-4 text-right space-x-2 whitespace-nowrap">
-                                        <button
-                                            onClick={() => openReplyModal(inq)}
-                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded"
-                                            title="Reply via Email"
-                                        >
-                                            <Mail size={18} />
-                                        </button>
+                                        {inq.customer?.email && inq.customer.email !== "no-email@provided.com" ? (
+                                            <a
+                                                href={`mailto:${inq.customer.email}?subject=Re: ${encodeURIComponent(inq.message || 'Your Inquiry to Sarvatman')}`}
+                                                className="inline-block p-2 text-blue-600 hover:bg-blue-50 rounded"
+                                                title="Reply via Email"
+                                            >
+                                                <Mail size={18} />
+                                            </a>
+                                        ) : (
+                                            <span className="inline-block p-2 text-slate-300 cursor-not-allowed" title="No email provided">
+                                                <Mail size={18} />
+                                            </span>
+                                        )}
                                         <button
                                             onClick={() => handleDelete(inq._id)}
                                             className="p-2 text-red-600 hover:bg-red-50 rounded"
@@ -180,8 +186,8 @@ export default function AdminInquiriesPage() {
                 </table>
             </div>
 
-            {/* Reply Modal */}
-            {replyModalOpen && selectedInquiry && (
+            {/* Old Reply Modal (commented out — using mailto: for now) */}
+            {/* {replyModalOpen && selectedInquiry && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 relative">
                         <button
@@ -225,7 +231,7 @@ export default function AdminInquiriesPage() {
                         </form>
                     </div>
                 </div>
-            )}
+            )} */}
         </div>
     );
 }

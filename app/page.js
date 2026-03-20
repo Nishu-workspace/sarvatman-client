@@ -338,7 +338,7 @@ export default function Home() {
               {/* Navigates to Page */}
               <motion.div whileHover={buttonHover} whileTap={buttonTap}>
                 <Link
-                  href="/products/slipform-paver-sp-1000"
+                  href="/products/slipform-paver-sp-1080"
                   className="px-8 py-4 border border-white text-white font-medium rounded hover:bg-white/10 transition flex items-center justify-center gap-2"
                 >
                   View Specs <ArrowRight size={18} />
@@ -452,7 +452,7 @@ export default function Home() {
                 whileHover={buttonHover}
                 whileTap={buttonTap}
               >
-                <span className="relative z-10">Download Brochure</span>
+                <span className="relative z-10"><a href="https://res.cloudinary.com/duhmwi1ve/image/upload/v1773851173/sarvatman/brochures/sarvatman-1773851173058.pdf">Download Brochure </a></span>
                 <ArrowRight
                   size={18}
                   className="relative z-10 group-hover:translate-x-1 transition-transform"

@@ -338,7 +338,7 @@ export default function Home() {
               {/* Navigates to Page */}
               <motion.div whileHover={buttonHover} whileTap={buttonTap}>
                 <Link
-                  href="/products/slip-form-paver"
+                  href="/products/slipform-paver-sp-1000"
                   className="px-8 py-4 border border-white text-white font-medium rounded hover:bg-white/10 transition flex items-center justify-center gap-2"
                 >
                   View Specs <ArrowRight size={18} />

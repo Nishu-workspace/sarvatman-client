@@ -139,22 +139,22 @@ export default function Home() {
     setSelectedProduct(productName);
     setIsModalOpen(true);
   };
-  const otherProducts = [
+   const otherProducts = [
     {
       id: 1,
-      name: "Kerb Paver SKM-60",
-      slug: "kerb-paver-skm-60",
+      name: "Kerb Paver skm",
+      slug: "kerb-paver-machine-skm-540",
       category: "Compact Pavers",
       description:
-        "India's most trusted compact kerb paver. Ideal for spaces and rapid road edge construction.",
+        "India's most trusted compact kerb paver. Ideal for tight spaces and rapid road edge construction.",
       specs: ["16HP Air Cooled", "Width: 600mm"], // Shortened for cleaner UI
       image: img1.src,
     },
     {
       id: 2,
-      name: "Hydraulic Road Sweeper",
+      name: "Slipform Paver",
       category: "Cleaning Equipment",
-      slug: "hydraulic-road-sweeper",
+      slug: "slipform-paver-sp-1080",
       description:
         "Heavy-duty hydraulic broom for effective dust and debris cleaning before asphalt laying.",
       specs: ["Width: 2.1 Meters", "Tractor Attached"],
@@ -162,7 +162,8 @@ export default function Home() {
     },
     {
       id: 3,
-      name: "Concrete Groove Cutter",
+      name: "Kerb Paver",
+      slug: "kerb-paver-machine-skm-60",
       category: "Cutting Technology",
       description:
         "High-performance cutter for creating expansion joints in concrete roads and runways.",
@@ -170,7 +171,6 @@ export default function Home() {
       image: img3.src,
     },
   ];
-
   return (
     <main className="min-h-screen bg-white font-sans text-slate-800">
       {/* ================= HEADER ================= */}

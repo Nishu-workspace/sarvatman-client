@@ -77,10 +77,24 @@ export default function Home() {
 
   const handleModalSubmit = async (e) => {
     e.preventDefault();
+
+    if (inquiryData.name.trim().length < 2) {
+      toast.error("Please enter a valid name (at least 2 characters).");
+      return;
+    }
+    if (!/^[0-9]{10}$/.test(inquiryData.phone)) {
+      toast.error("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+    if (inquiryData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inquiryData.email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       await api.post("/inquiries", {
-        name: inquiryData.name,
+        name: inquiryData.name.trim(),
         phone: inquiryData.phone,
         company: inquiryData.location,
         email: inquiryData.email || "no-email@provided.com",
@@ -101,10 +115,20 @@ export default function Home() {
 
   const handleHomeSubmit = async (e) => {
     e.preventDefault();
+
+    if (homeInquiryData.name.trim().length < 2) {
+      toast.error("Please enter a valid name (at least 2 characters).");
+      return;
+    }
+    if (!/^[0-9]{10}$/.test(homeInquiryData.phone)) {
+      toast.error("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+
     setHomeSubmitting(true);
     try {
       await api.post("/inquiries", {
-        name: homeInquiryData.name,
+        name: homeInquiryData.name.trim(),
         phone: homeInquiryData.phone,
         company: "N/A",
         email: "no-email@provided.com",
@@ -872,15 +896,17 @@ export default function Home() {
                   <input
                     type="tel"
                     required
+                    maxLength={10}
                     value={homeInquiryData.phone}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, "").slice(0, 10);
                       setHomeInquiryData({
                         ...homeInquiryData,
-                        phone: e.target.value,
-                      })
-                    }
+                        phone: val,
+                      });
+                    }}
                     className="w-full border-b border-slate-300 py-2 focus:outline-none focus:border-amber-500 transition-colors bg-white/50"
-                    placeholder="+91 9428919894"
+                    placeholder="10-digit mobile number"
                   />
                 </motion.div>
                 <motion.div
@@ -1093,15 +1119,17 @@ export default function Home() {
                     <input
                       type="tel"
                       required
+                      maxLength={10}
                       value={inquiryData.phone}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, "").slice(0, 10);
                         setInquiryData({
                           ...inquiryData,
-                          phone: e.target.value,
-                        })
-                      }
+                          phone: val,
+                        });
+                      }}
                       className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
-                      placeholder="+91 98765 00000"
+                      placeholder="10-digit mobile number"
                     />
                   </motion.div>
                   <motion.div

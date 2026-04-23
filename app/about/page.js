@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck, Trophy, Target, ArrowRight, Factory, Toolbox } from "lucide-react";
 import Link from "next/link";
+import Navbar from "../../components/Navbar";
 
 export default function AboutUsPage() {
     const containerVariants = {
@@ -25,6 +26,7 @@ export default function AboutUsPage() {
 
     return (
         <main className="min-h-screen bg-slate-50 font-sans">
+            <Navbar />
             {/* Hero Section */}
             <section className="relative bg-slate-900 text-white py-32 overflow-hidden">
                 {/* Background Image Setup */}

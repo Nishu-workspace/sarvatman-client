@@ -149,13 +149,27 @@ export default function ProductsPage() {
 
   const handleInquirySubmit = async (e) => {
     e.preventDefault();
+
+    if (inquiryData.name.trim().length < 2) {
+      toast.error("Please enter a valid name (at least 2 characters).");
+      return;
+    }
+    if (!/^[0-9]{10}$/.test(inquiryData.phone)) {
+      toast.error("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+    if (inquiryData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inquiryData.email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       await api.post("/inquiries", {
-        name: inquiryData.name,
+        name: inquiryData.name.trim(),
         phone: inquiryData.phone,
         company: inquiryData.location,
-        email: inquiryData.email || "no-email@provided.com", // required by schema
+        email: inquiryData.email || "no-email@provided.com",
         message: `Inquiry for product: ${selectedProduct}`
       });
       toast.success("Inquiry submitted successfully! We will contact you soon.");
@@ -217,10 +231,10 @@ export default function ProductsPage() {
               Products
             </Link>
             <a
-              href="tel:+919876543210"
+              href="tel:+919428919894"
               className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded hover:bg-slate-800 transition"
             >
-              <Phone size={16} /> +91 98765 43210
+              <Phone size={16} /> +91 94289 19894
             </a>
           </div>
           <button className="md:hidden">
@@ -500,10 +514,14 @@ export default function ProductsPage() {
                     <input
                       type="tel"
                       required
+                      maxLength={10}
                       value={inquiryData.phone}
-                      onChange={(e) => setInquiryData({ ...inquiryData, phone: e.target.value })}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                        setInquiryData({ ...inquiryData, phone: val });
+                      }}
                       className="w-full border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-amber-500"
-                      placeholder="+91 98765 00000"
+                      placeholder="10-digit mobile number"
                     />
                   </div>
                   <div>

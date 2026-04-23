@@ -15,7 +15,7 @@ export default function FloatingWidget() {
     }
 
     // Add the logic the user wanted: pre-filled message
-    const whatsappNumber = "919876543210";
+    const whatsappNumber = "919428919894";
     const whatsappMessage = encodeURIComponent("Hello Sarvatman! I am interested in your road machinery products.");
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
@@ -39,7 +39,7 @@ export default function FloatingWidget() {
                 <MessageCircle size={28} />
             </motion.a>
             <motion.a
-                href="tel:+919876543210"
+                href="tel:+919428919894"
                 className="bg-amber-500 text-black p-4 rounded-full shadow-lg flex items-center justify-center"
                 aria-label="Call Now"
                 whileHover={{ scale: 1.1, rotate: -5 }}

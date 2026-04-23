@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { LayoutDashboard, Package, MessageSquare, LogOut, Menu } from "lucide-react";
-
+import api from "../../lib/api";
 import toast from "react-hot-toast";
 
 export default function AdminLayout({ children }) {

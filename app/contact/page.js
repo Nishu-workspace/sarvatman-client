@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Send, CheckCircle2 } from "lucide-react";
 import api from "../../lib/api";
+import Navbar from "../../components/Navbar";
 
 export default function ContactUsPage() {
   const [formData, setFormData] = useState({
@@ -17,10 +18,21 @@ export default function ContactUsPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.name.trim().length < 2) {
+      return;
+    }
+    if (!/^[0-9]{10}$/.test(formData.phone)) {
+      return;
+    }
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      return;
+    }
+
     setLoading(true);
     try {
       await api.post("/inquiries", {
-        name: formData.name,
+        name: formData.name.trim(),
         phone: formData.phone,
         email: formData.email || "no-email@provided.com",
         company: "N/A",
@@ -37,7 +49,14 @@ export default function ContactUsPage() {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "phone") {
+      // Only allow digits, max 10
+      const cleaned = value.replace(/\D/g, "").slice(0, 10);
+      setFormData({ ...formData, phone: cleaned });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const containerVariants = {
@@ -59,6 +78,7 @@ export default function ContactUsPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 font-sans">
+      <Navbar />
       {/* Hero Section */}
       <section className="bg-slate-900 text-white py-24 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-500 via-slate-900 to-slate-900"></div>
@@ -255,8 +275,11 @@ export default function ContactUsPage() {
                         value={formData.phone}
                         onChange={handleChange}
                         required
+                        maxLength={10}
+                        pattern="[0-9]{10}"
+                        title="Please enter a valid 10-digit mobile number"
                         className="w-full text-slate-600 bg-slate-50 border border-slate-200 rounded px-4 py-3 outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
-                        placeholder="+91 98765 00000"
+                        placeholder="10-digit mobile number"
                       />
                     </div>
                   </div>

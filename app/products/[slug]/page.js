@@ -54,10 +54,25 @@ export default function ProductPage() {
 
   const handleInquirySubmit = async (e) => {
     e.preventDefault();
+
+    // Frontend validations
+    if (inquiryData.name.trim().length < 2) {
+      toast.error("Please enter a valid name (at least 2 characters).");
+      return;
+    }
+    if (!/^[0-9]{10}$/.test(inquiryData.phone)) {
+      toast.error("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+    if (inquiryData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inquiryData.email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       await api.post("/inquiries", {
-        name: inquiryData.name,
+        name: inquiryData.name.trim(),
         phone: inquiryData.phone,
         company: inquiryData.location,
         email: inquiryData.email || "no-email@provided.com",
@@ -96,14 +111,14 @@ export default function ProductPage() {
       {/* ================= FAB (Floating Action Buttons) ================= */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
         <a
-          href="https://wa.me/919876543210"
+          href="https://wa.me/919428919894"
           target="_blank"
           className="bg-green-500 text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform flex items-center justify-center"
         >
           <MessageCircle size={28} />
         </a>
         <a
-          href="tel:+919876543210"
+          href="tel:+919428919894"
           className="bg-amber-500 text-black p-4 rounded-full shadow-lg hover:scale-110 transition-transform flex items-center justify-center"
         >
           <Phone size={28} />
@@ -116,7 +131,7 @@ export default function ProductPage() {
           <span>Factory: Mehsana, Gujarat</span>
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1">
-              <Phone size={14} /> Sales: +91 98765 43210
+              <Phone size={14} /> Sales: +91 94289 19894
             </span>
           </div>
         </div>
@@ -181,16 +196,6 @@ export default function ProductPage() {
                 <div className="absolute top-4 left-4 bg-amber-500 text-black px-3 py-1 text-xs font-bold uppercase tracking-wider rounded">
                   Best Seller
                 </div>
-              </div>
-
-              {/* Thumbnails (Optional) */}
-              <div className="flex gap-4 mt-4 overflow-x-auto pb-2">
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="w-24 h-24 bg-slate-100 rounded-lg shrink-0 border hover:border-amber-500 cursor-pointer"
-                  ></div>
-                ))}
               </div>
             </div>
 
@@ -354,15 +359,17 @@ export default function ProductPage() {
                     <input
                       type="tel"
                       required
+                      maxLength={10}
                       value={inquiryData.phone}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, "").slice(0, 10);
                         setInquiryData({
                           ...inquiryData,
-                          phone: e.target.value,
-                        })
-                      }
+                          phone: val,
+                        });
+                      }}
                       className="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 outline-none"
-                      placeholder="+91"
+                      placeholder="10-digit mobile number"
                     />
                   </div>
                   <div>
@@ -396,10 +403,10 @@ export default function ProductPage() {
                     Or call us directly:
                   </p>
                   <a
-                    href="tel:+919876543210"
+                    href="tel:+919428919894"
                     className="flex items-center justify-center gap-2 text-lg font-bold text-amber-600 hover:underline"
                   >
-                    <Phone size={18} /> +91 98765 43210
+                    <Phone size={18} /> +91 94289 19894
                   </a>
                 </div>
               </div>
@@ -414,7 +421,7 @@ export default function ProductPage() {
                   requirements.
                 </p>
                 <a
-                  href="https://wa.me/919876543210"
+                  href="https://wa.me/919428919894"
                   className="flex items-center gap-2 text-green-600 font-bold hover:underline"
                 >
                   <MessageCircle size={18} /> Chat on WhatsApp

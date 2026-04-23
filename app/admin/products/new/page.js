@@ -35,10 +35,7 @@ export default function NewProductPage() {
     const formDataFile = new FormData();
     formDataFile.append("file", file);
     formDataFile.append("upload_preset", "SarvatmanImages");
-    // if (fieldName == 'brochureUrl') {
-    //     formDataFile.append('resource_type', 'raw')
 
-    // }
     try {
       setUploading(true);
 
@@ -46,8 +43,6 @@ export default function NewProductPage() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (res.data.success) {
-        console.log(res.data);
-
         setFormData((prev) => ({
           ...prev,
           [fieldName]: res.data.url,

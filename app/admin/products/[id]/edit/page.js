@@ -60,12 +60,14 @@ export default function EditProductPage() {
                 // Fetch all products to find the one by ID
                 const allRes = await api.get("/admin/getall");
                 const products = Array.isArray(allRes.data) ? allRes.data : allRes.data.data;
-                const product = products.find((p) => p._id === id);
+                
+                // Use string comparison for ID to avoid type mismatches
+                const product = products.find((p) => String(p._id) === String(id));
 
                 if (product) {
                     // Helper to convert object/map back to array of {key, value}
                     const parseSpecs = (specs) => {
-                        if (!specs || Object.keys(specs).length === 0) return [{ key: "", value: "" }];
+                        if (!specs || typeof specs !== "object" || Object.keys(specs).length === 0) return [{ key: "", value: "" }];
                         return Object.entries(specs).map(([key, value]) => ({ key, value }));
                     };
 
@@ -77,7 +79,7 @@ export default function EditProductPage() {
                         imageUrl: product.imageUrl || "",
                         brochureUrl: product.brochureUrl || "",
                         status: product.status || "draft",
-                        features: product.features && product.features.length > 0 ? product.features : [""],
+                        features: Array.isArray(product.features) && product.features.length > 0 ? product.features : [""],
                         displaySpecs: parseSpecs(product.displaySpecs),
                     });
                 }
@@ -192,6 +194,8 @@ export default function EditProductPage() {
                             />
                         </div>
                     </div>
+
+
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>

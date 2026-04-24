@@ -74,6 +74,8 @@ export default function Home() {
     interestedMachine: "Kerb Paver SKM-60",
   });
   const [homeSubmitting, setHomeSubmitting] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
 
   const handleModalSubmit = async (e) => {
     e.preventDefault();
@@ -158,43 +160,41 @@ export default function Home() {
     return () => unsubscribe();
   }, [scrollY]);
 
+  // Fetch dynamic products
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await api.get("/products");
+        const allProducts = res.data.success ? res.data.data : res.data;
+        
+        // Transform the first 3 products for the "Machinery For Every Need" section
+        const transformed = allProducts.slice(0, 3).map(p => ({
+          id: p._id,
+          name: p.name,
+          slug: p.slug,
+          category: p.category,
+          description: p.description,
+          // Convert displaySpecs Map to array of strings
+          specs: Object.entries(p.displaySpecs || {}).map(([key, value]) => `${key}: ${value}`).slice(0, 2),
+          image: p.imageUrl
+        }));
+        
+        setProducts(transformed);
+      } catch (err) {
+        console.error("Failed to fetch products", err);
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   // 2. Function to open modal with specific product
   const openQuoteModal = (productName) => {
     setSelectedProduct(productName);
     setIsModalOpen(true);
   };
-   const otherProducts = [
-    {
-      id: 1,
-      name: "Kerb Paver skm",
-      slug: "kerb-paver-machine-skm-540",
-      category: "Compact Pavers",
-      description:
-        "India's most trusted compact kerb paver. Ideal for tight spaces and rapid road edge construction.",
-      specs: ["16HP Air Cooled", "Width: 600mm"], // Shortened for cleaner UI
-      image: img1.src,
-    },
-    {
-      id: 2,
-      name: "Slipform Paver",
-      category: "Cleaning Equipment",
-      slug: "slipform-paver-sp-1080",
-      description:
-        "Heavy-duty hydraulic broom for effective dust and debris cleaning before asphalt laying.",
-      specs: ["Width: 2.1 Meters", "Tractor Attached"],
-      image: img2.src,
-    },
-    {
-      id: 3,
-      name: "Kerb Paver",
-      slug: "kerb-paver-machine-skm-60",
-      category: "Cutting Technology",
-      description:
-        "High-performance cutter for creating expansion joints in concrete roads and runways.",
-      specs: ["Depth: 200mm", "Water Tank Incl."],
-      image: img3.src,
-    },
-  ];
+
   return (
     <main className="min-h-screen bg-white font-sans text-slate-800">
       {/* ================= HEADER ================= */}
@@ -529,7 +529,7 @@ export default function Home() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "0px", amount: 0.05 }}
           >
-            {otherProducts.map((product, index) => (
+            {products.map((product, index) => (
               <motion.div
                 key={product.id}
                 className="bg-white rounded-xl overflow-hidden shadow-sm group flex flex-col items-center justify-center border border-slate-100"
